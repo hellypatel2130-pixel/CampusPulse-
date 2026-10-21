@@ -1,0 +1,129 @@
+﻿@using UserRole.ViewModel
+@model VerifyEmailViewModel
+
+@{
+    ViewData["Title"] = "Verify Email";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="account-container">
+
+    <div class="account-box">
+
+        <div class="text-center mb-4">
+
+            <div class="login-icon mb-3">
+
+                <i class="fa-solid fa-envelope-circle-check"></i>
+
+            </div>
+
+            <h2>
+
+                Verify Your Email
+
+            </h2>
+
+            <p class="login-subtitle">
+
+                Enter your registered email address to continue the password recovery process.
+
+            </p>
+
+        </div>
+
+        <form asp-action="VerifyEmail"
+              method="post"
+              autocomplete="off">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="mb-4">
+
+                <label asp-for="Email"
+                       class="form-label">
+
+                    <i class="fa-solid fa-envelope me-2"></i>
+
+                    Registered Email
+
+                </label>
+
+                <input asp-for="Email"
+                       class="form-control"
+                       placeholder="Enter your registered email" />
+
+                <span asp-validation-for="Email"
+                      class="text-danger"></span>
+
+            </div>
+
+            <!-- VERIFY BUTTON -->
+
+            <button type="submit"
+                    class="btn btn-success w-100">
+
+                <i class="fa-solid fa-paper-plane me-2"></i>
+
+                Send Verification Link
+
+            </button>
+
+            <!-- DIVIDER -->
+
+            <div class="auth-divider my-4">
+
+                <span>
+
+                    OR
+
+                </span>
+
+            </div>
+
+            <!-- LOGIN -->
+
+            <a asp-controller="Account"
+               asp-action="Login"
+               class="btn btn-outline-light w-100 goto-login">
+
+                <i class="fa-solid fa-right-to-bracket me-2"></i>
+
+                Back To Login
+
+            </a>
+
+            <!-- HOME -->
+
+            <div class="text-center mt-4">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="back-home">
+
+                    <i class="fa-solid fa-house me-2"></i>
+
+                    Back To Home
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

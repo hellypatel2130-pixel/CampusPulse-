@@ -1,0 +1,404 @@
+﻿@using UserRole.ViewModel
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="account-container">
+
+    <div class="account-box register-box">
+
+        <div class="text-center mb-4">
+
+            <div class="login-icon mb-3">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+
+            <h2>Create Account</h2>
+
+            <p class="login-subtitle">
+                Join CampusPulse+ and start collaborating today.
+            </p>
+
+        </div>
+
+        <form asp-action="Register"
+              method="post"
+              autocomplete="off">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="row g-4">
+
+                <!-- LEFT COLUMN -->
+
+                <div class="col-lg-6">
+
+                    <!-- Name -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Name" class="form-label">
+                            <i class="fa-solid fa-user me-2"></i>
+                            Full Name
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="Enter your full name" />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Department -->
+
+                    <div class="department-select">
+
+                        <select asp-for="Department"
+                                class="form-select">
+
+                            <option value="">Select Department</option>
+
+
+                            <!-- Engineering -->
+                            <option>Computer Science Engineering (CSE)</option>
+                            <option>Information Technology (IT)</option>
+                            <option>Artificial Intelligence & Data Science (AI & DS)</option>
+                            <option>Artificial Intelligence & Machine Learning (AI & ML)</option>
+                            <option>Computer Engineering (CE)</option>
+                            <option>Software Engineering</option>
+                            <option>Cyber Security</option>
+                            <option>Data Science</option>
+                            <option>Electronics & Communication Engineering (ECE)</option>
+                            <option>Electrical Engineering (EE)</option>
+                            <option>Electrical & Electronics Engineering (EEE)</option>
+                            <option>Mechanical Engineering (ME)</option>
+                            <option>Civil Engineering</option>
+                            <option>Chemical Engineering</option>
+                            <option>Petroleum Engineering</option>
+                            <option>Mining Engineering</option>
+                            <option>Metallurgical Engineering</option>
+                            <option>Automobile Engineering</option>
+                            <option>Aeronautical Engineering</option>
+                            <option>Aerospace Engineering</option>
+                            <option>Marine Engineering</option>
+                            <option>Robotics Engineering</option>
+                            <option>Mechatronics Engineering</option>
+                            <option>Production Engineering</option>
+                            <option>Industrial Engineering</option>
+                            <option>Textile Engineering</option>
+                            <option>Environmental Engineering</option>
+                            <option>Agricultural Engineering</option>
+                            <option>Biomedical Engineering</option>
+                            <option>Biotechnology Engineering</option>
+
+                            <!-- Computer -->
+                            <option>BCA</option>
+                            <option>MCA</option>
+                            <option>B.Sc. Information Technology</option>
+                            <option>M.Sc. Information Technology</option>
+                            <option>B.Sc. Computer Science</option>
+                            <option>M.Sc. Computer Science</option>
+
+                            <!-- Pharmacy -->
+                            <option>D.Pharm</option>
+                            <option>B.Pharm</option>
+                            <option>M.Pharm</option>
+                            <option>Pharm.D</option>
+
+                            <!-- Medical -->
+                            <option>MBBS</option>
+                            <option>BDS (Dental)</option>
+                            <option>BAMS</option>
+                            <option>BHMS</option>
+                            <option>BPT (Physiotherapy)</option>
+                            <option>BOT (Occupational Therapy)</option>
+                            <option>B.Sc. Nursing</option>
+                            <option>GNM Nursing</option>
+                            <option>ANM Nursing</option>
+                            <option>M.Sc. Nursing</option>
+
+                            <!-- Science -->
+                            <option>B.Sc. Physics</option>
+                            <option>B.Sc. Chemistry</option>
+                            <option>B.Sc. Mathematics</option>
+                            <option>B.Sc. Biology</option>
+                            <option>B.Sc. Microbiology</option>
+                            <option>B.Sc. Biotechnology</option>
+                            <option>B.Sc. Environmental Science</option>
+                            <option>M.Sc. Physics</option>
+                            <option>M.Sc. Chemistry</option>
+                            <option>M.Sc. Mathematics</option>
+                            <option>M.Sc. Biotechnology</option>
+
+                            <!-- Commerce -->
+                            <option>B.Com</option>
+                            <option>M.Com</option>
+                            <option>BBA</option>
+                            <option>MBA</option>
+                            <option>Bachelor of Accounting & Finance (BAF)</option>
+                            <option>Bachelor of Banking & Insurance (BBI)</option>
+
+                            <!-- Arts -->
+                            <option>BA English</option>
+                            <option>BA Hindi</option>
+                            <option>BA Gujarati</option>
+                            <option>BA Economics</option>
+                            <option>BA Psychology</option>
+                            <option>BA Sociology</option>
+                            <option>BA Political Science</option>
+                            <option>BA History</option>
+                            <option>MA English</option>
+                            <option>MA Psychology</option>
+                            <option>MA Economics</option>
+
+                            <!-- Law -->
+                            <option>LLB</option>
+                            <option>BA LLB</option>
+                            <option>BBA LLB</option>
+                            <option>LLM</option>
+
+                            <!-- Education -->
+                            <option>B.Ed</option>
+                            <option>M.Ed</option>
+
+                            <!-- Agriculture -->
+                            <option>B.Sc. Agriculture</option>
+                            <option>M.Sc. Agriculture</option>
+                            <option>Horticulture</option>
+                            <option>Forestry</option>
+
+                            <!-- Design -->
+                            <option>Fashion Designing</option>
+                            <option>Interior Designing</option>
+                            <option>Graphic Designing</option>
+                            <option>Animation & Multimedia</option>
+
+                            <!-- Hotel & Tourism -->
+                            <option>Hotel Management</option>
+                            <option>Hospitality Management</option>
+                            <option>Travel & Tourism</option>
+
+                            <!-- Journalism -->
+                            <option>Journalism & Mass Communication</option>
+                            <option>Digital Media</option>
+
+                            <!-- Fine Arts -->
+                            <option>Fine Arts</option>
+                            <option>Performing Arts</option>
+                            <option>Music</option>
+                            <option>Dance</option>
+
+                            <!-- Others -->
+                            <option>Architecture (B.Arch)</option>
+                            <option>Planning</option>
+                            <option>Library Science</option>
+                            <option>Physical Education</option>
+                            <option>Social Work (BSW/MSW)</option>
+                            <option>Other</option>
+
+                        </select>
+
+                        <i class="fa-solid fa-chevron-down department-arrow"></i>
+
+                    </div>
+                    <!-- Password -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Password" class="form-label">
+                            <i class="fa-solid fa-lock me-2"></i>
+                            Password
+                        </label>
+
+                        <input asp-for="Password"
+                               type="password"
+                               class="form-control"
+                               placeholder="Create password" />
+
+                        <span asp-validation-for="Password"
+                              class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN -->
+
+                <div class="col-lg-6">
+
+                    <!-- Enrollment -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="EnrollmentNo" class="form-label">
+                            <i class="fa-solid fa-id-card me-2"></i>
+                            Enrollment Number
+                        </label>
+
+                        <input asp-for="EnrollmentNo"
+                               class="form-control"
+                               placeholder="e.g. 23CE001" />
+
+                        <span asp-validation-for="EnrollmentNo"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Email -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Email" class="form-label">
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            Email Address
+                        </label>
+
+                        <input asp-for="Email"
+                               class="form-control"
+                               placeholder="example@gmail.com" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Confirm Password -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="ConfirmPassword" class="form-label">
+                            <i class="fa-solid fa-shield-halved me-2"></i>
+                            Confirm Password
+                        </label>
+
+                        <input asp-for="ConfirmPassword"
+                               type="password"
+                               class="form-control"
+                               placeholder="Confirm password" />
+
+                        <span asp-validation-for="ConfirmPassword"
+                              class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <div class="mt-4">
+
+                <button type="submit"
+                        class="btn btn-success w-100">
+
+                    <i class="fa-solid fa-user-check me-2"></i>
+
+                    Create Account
+
+                </button>
+
+            </div>
+
+            <!-- Divider -->
+
+            <div class="auth-divider my-4">
+
+                <span>OR</span>
+
+            </div>
+
+            <!-- Login -->
+
+            <p class="text-center mb-3">
+
+                Already have an account?
+
+            </p>
+
+            <a asp-controller="Account"
+               asp-action="Login"
+               class="btn btn-outline-light w-100">
+
+                <i class="fa-solid fa-right-to-bracket me-2"></i>
+
+                Login Instead
+
+            </a>
+
+            <!-- Back -->
+
+            <div class="text-center mt-4">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="back-home">
+
+                    <i class="fa-solid fa-arrow-left me-2"></i>
+
+                    Back to Home
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<style>
+.department-select{
+position:relative;
+}
+
+.department-select select{
+
+appearance:none;
+-webkit-appearance:none;
+-moz-appearance:none;
+
+padding-right:45px;
+
+cursor:pointer;
+}
+
+.department-arrow{
+
+position:absolute;
+
+right:18px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+color:#666;
+
+pointer-events:none;
+
+transition:.3s;
+}
+
+.department-select:hover .department-arrow{
+
+color:#7c3aed;
+
+}
+</style>
