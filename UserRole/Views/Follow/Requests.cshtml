@@ -1,0 +1,315 @@
+@model List<UserRole.Models.Follow>
+
+@{
+    ViewData["Title"] = "Follow Requests";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+
+    body {
+        background: #eef2f7;
+    }
+
+    .requests-container {
+        max-width: 1100px;
+        margin: 40px auto;
+    }
+
+    .requests-card {
+        background: white;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 20px 45px rgba(0,0,0,.08);
+    }
+
+    .requests-header {
+        background: linear-gradient(135deg,#A8D1A3,#7c3aed);
+        color: white;
+        padding: 35px;
+    }
+
+        .requests-header h2 {
+            margin: 0;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .requests-header p {
+            margin-top: 10px;
+            opacity: .9;
+        }
+
+    .requests-body {
+        padding: 30px;
+    }
+
+    .request-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 22px;
+        border-radius: 22px;
+        border: 1px solid #edf2f7;
+        margin-bottom: 18px;
+        transition: .35s;
+        background: white;
+    }
+
+        .request-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(79,70,229,.12);
+        }
+
+    .request-user {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .request-avatar {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 10px 25px rgba(0,0,0,.12);
+    }
+
+    .request-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .request-subtitle {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-accept {
+        background: linear-gradient(135deg,#22c55e,#16a34a);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 22px;
+        font-weight: 600;
+    }
+
+    .btn-reject {
+        background: linear-gradient(135deg,#ef4444,#dc2626);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 22px;
+        font-weight: 600;
+    }
+
+        .btn-accept:hover,
+        .btn-reject:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .empty-box {
+        text-align: center;
+        padding: 70px 20px;
+    }
+
+        .empty-box i {
+            font-size: 80px;
+            color: #c7d2fe;
+        }
+
+        .empty-box h3 {
+            margin-top: 20px;
+            font-weight: 700;
+        }
+
+</style>
+
+<div class="requests-container">
+
+    <div class="requests-card">
+
+        <div class="requests-header">
+
+            <h2>
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                Follow Requests
+
+            </h2>
+
+            <p>
+
+                Accept or reject students who want to connect with you.
+
+            </p>
+
+        </div>
+
+        <div class="requests-body">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="empty-box">
+
+                    <i class="fa-regular fa-user"></i>
+
+                    <h3>
+
+                        No Pending Requests
+
+                    </h3>
+
+                    <p class="text-muted">
+
+                        You're all caught up! New follow requests will appear here.
+
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="request-item">
+
+                        <div class="request-user">
+
+                            <img src="@(string.IsNullOrWhiteSpace(item.Follower?.ProfilePicture)
+                                                                         ? "/images/default-user.png"
+                                                                         : item.Follower.ProfilePicture)"
+                                 class="request-avatar"
+                                 alt="Profile" />
+
+                            <div>
+
+                                <div class="request-name">
+
+                                    @(item.Follower?.FullName ?? "Unknown User")
+
+                                </div>
+
+                                <div class="request-subtitle">
+
+                                    @if (!string.IsNullOrWhiteSpace(item.Follower?.Department))
+                                    {
+                                        <span>
+
+                                            <i class="fa-solid fa-building-columns"></i>
+
+                                            @item.Follower.Department
+
+                                        </span>
+                                    }
+
+                                    @if (!string.IsNullOrWhiteSpace(item.Follower?.EnrollmentNo))
+                                    {
+                                        <span class="ms-2">
+
+                                            • @item.Follower.EnrollmentNo
+
+                                        </span>
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="action-buttons">
+
+                            <a asp-action="Accept"
+                               asp-route-id="@item.Id"
+                               class="btn btn-accept">
+
+                                <i class="fa-solid fa-check"></i>
+
+                                Accept
+
+                            </a>
+
+                            <a asp-action="Reject"
+                               asp-route-id="@item.Id"
+                               class="btn btn-reject"
+                               onclick="return confirm('Reject this follow request?');">
+
+                                <i class="fa-solid fa-xmark"></i>
+
+                                Reject
+
+                            </a>
+
+                        </div>
+
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .request-item {
+        animation: fadeRequest .45s ease;
+    }
+
+   @@keyframes fadeRequest {
+
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media(max - width:768px) {
+
+        .request-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .action-buttons {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn-accept,
+        .btn-reject {
+            flex: 1;
+            text-align: center;
+        }
+
+        .request-avatar {
+            width: 55px;
+            height: 55px;
+        }
+
+        .request-name {
+            font-size: 18px;
+        }
+    }
+
+</style>
+<partial name="_Footer" />
