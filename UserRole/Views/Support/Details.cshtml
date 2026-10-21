@@ -1,0 +1,156 @@
+﻿@model UserRole.Models.SupportTicket
+
+@{
+    ViewData["Title"] = "Ticket Details";
+}
+
+<style>
+
+    body {
+        background: #eef4ff;
+    }
+
+    .ticket-box {
+        max-width: 900px;
+        margin: 40px auto;
+    }
+
+    .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,.08);
+    }
+
+    .card-header {
+        color: white;
+        background: linear-gradient(135deg,#A8D1A3,#7c3aed,#2563eb);
+        padding: 25px;
+    }
+
+    .info-row {
+        margin-bottom: 18px;
+    }
+
+    .info-title {
+        font-weight: bold;
+        color: #475569;
+    }
+
+    .message-box {
+        background: #f8fafc;
+        border-radius: 15px;
+        padding: 20px;
+        min-height: 180px;
+    }
+
+</style>
+
+<div class="ticket-box">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h3>
+                @Model.TicketNumber
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="info-row">
+                <span class="info-title">Student :</span>
+                @Model.Name
+            </div>
+
+            <div class="info-row">
+                <span class="info-title">Email :</span>
+                @Model.Email
+            </div>
+
+            <div class="info-row">
+                <span class="info-title">Subject :</span>
+                @Model.Subject
+            </div>
+
+            <div class="info-row">
+                <span class="info-title">Priority :</span>
+                @Model.Priority
+            </div>
+
+            <div class="info-row">
+                <span class="info-title">Created :</span>
+                @Model.CreatedAt.ToString("dd MMM yyyy hh:mm tt")
+            </div>
+
+            <hr />
+
+            <h5>Problem</h5>
+
+            <div class="message-box">
+
+                @Model.Message
+
+            </div>
+
+            <hr />
+
+            <form asp-action="UpdateStatus"
+                  method="post">
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.Id" />
+
+                <div class="row">
+
+                    <div class="col-md-8">
+
+                        <select name="status"
+                                class="form-select">
+
+                            <option selected="@(Model.Status == "Pending")">
+                                Pending
+                            </option>
+
+                            <option selected="@(Model.Status == "In Progress")">
+                                In Progress
+                            </option>
+
+                            <option selected="@(Model.Status == "Resolved")">
+                                Resolved
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <button class="btn btn-success w-100">
+
+                            Update Status
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<partial name="_Footer" />

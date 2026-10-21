@@ -1,0 +1,206 @@
+﻿@model IEnumerable<UserRole.Models.SupportTicket>
+
+@{
+    ViewData["Title"] = "My Support Tickets";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
+
+<style>
+
+    body {
+        background: #eef4ff;
+    }
+
+    .page-title{
+        font-weight:800;
+        color:#1f2937;
+    }
+
+    .ticket-card{
+        border:none;
+        border-radius:20px;
+        overflow:hidden;
+        box-shadow:0 15px 35px rgba(0,0,0,.08);
+    }
+
+    .ticket-header{
+        padding:25px;
+        color:white;
+        background:linear-gradient(135deg,#A8D1A3,#7c3aed,#2563eb);
+    }
+
+    .table th{
+        white-space:nowrap;
+    }
+
+    .badge-status{
+        padding:8px 14px;
+        border-radius:30px;
+        font-size:13px;
+        font-weight:700;
+    }
+
+    .pending{
+        background:#fff3cd;
+        color:#856404;
+    }
+
+    .progress{
+        background:#cfe2ff;
+        color:#084298;
+    }
+
+    .resolved{
+        background:#d1e7dd;
+        color:#0f5132;
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    <div class="ticket-card">
+
+        <div class="ticket-header">
+
+            <h2>
+                <i class="fa-solid fa-headset"></i>
+                My Support Tickets
+            </h2>
+
+            <p class="mb-0">
+                Track all your submitted support requests.
+            </p>
+
+        </div>
+
+        <div class="card-body">
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    You haven't submitted any support ticket yet.
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>Ticket No.</th>
+
+                                <th>Subject</th>
+
+                                <th>Priority</th>
+
+                                <th>Status</th>
+
+                                <th>Date</th>
+
+                                <th></th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        <strong>@item.TicketNumber</strong>
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.Subject
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.Priority
+
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.Status == "Pending")
+                                        {
+                                            <span class="badge-status pending">
+
+                                                Pending
+
+                                            </span>
+                                        }
+                                        else if (item.Status == "In Progress")
+                                        {
+                                            <span class="badge-status progress">
+
+                                                In Progress
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-status resolved">
+
+                                                Resolved
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        @item.CreatedAt.ToString("dd MMM yyyy")
+
+                                    </td>
+
+                                    <td>
+
+                                        <a asp-action="MyTicketDetails"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-outline-primary btn-sm">
+
+                                            <i class="fa-solid fa-eye"></i>
+
+                                            View
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+<partial name="_Footer" />

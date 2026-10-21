@@ -1,0 +1,233 @@
+﻿@model IEnumerable<UserRole.Models.SupportTicket>
+
+@{
+    ViewData["Title"] = "Support Tickets";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
+
+<style>
+
+    body {
+        background: #eef4ff;
+    }
+
+    .ticket-wrapper {
+        max-width: 1350px;
+        margin: 40px auto;
+    }
+
+    .ticket-card {
+        background: white;
+        border-radius: 25px;
+        box-shadow: 0 20px 45px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
+
+    .ticket-header {
+        padding: 30px;
+        color: white;
+        background: linear-gradient(135deg,#A8D1A3,#7c3aed,#2563eb);
+    }
+
+        .ticket-header h2 {
+            margin: 0;
+            font-weight: 800;
+        }
+
+    .table {
+        margin: 0;
+    }
+
+        .table th {
+            background: #f8fafc;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+    .badge-status {
+        padding: 8px 14px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .Pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .InProgress {
+        background: #cfe2ff;
+        color: #084298;
+    }
+
+    .Resolved {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .Low {
+        color: #198754;
+        font-weight: bold;
+    }
+
+    .Medium {
+        color: #fd7e14;
+        font-weight: bold;
+    }
+
+    .High {
+        color: #dc3545;
+        font-weight: bold;
+    }
+
+</style>
+
+<div class="ticket-wrapper">
+
+    <div class="ticket-card">
+
+        <div class="ticket-header">
+
+            <h2>
+                <i class="fa-solid fa-headset"></i>
+                Student Support Tickets
+            </h2>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Ticket</th>
+
+                        <th>Student</th>
+
+                        <th>Email</th>
+
+                        <th>Subject</th>
+
+                        <th>Priority</th>
+
+                        <th>Status</th>
+
+                        <th>Date</th>
+
+                        <th></th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            var statusClass = item.Status.Replace(" ", "");
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>@item.TicketNumber</strong>
+
+                                </td>
+
+                                <td>
+
+                                    @item.Name
+
+                                </td>
+
+                                <td>
+
+                                    @item.Email
+
+                                </td>
+
+                                <td>
+
+                                    @item.Subject
+
+                                </td>
+
+                                <td>
+
+                                    <span class="@item.Priority">
+
+                                        @item.Priority
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="badge-status @statusClass">
+
+                                        @item.Status
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    @item.CreatedAt.ToString("dd MMM yyyy")
+
+                                </td>
+
+                                <td>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-primary btn-sm">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                        View
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+
+                            <td colspan="8" class="text-center py-5">
+
+                                <i class="fa-solid fa-circle-info fa-2x mb-3"></i>
+
+                                <br />
+
+                                No support tickets found.
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<partial name="_Footer" />
