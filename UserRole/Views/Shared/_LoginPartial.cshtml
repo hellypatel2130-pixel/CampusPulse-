@@ -1,0 +1,324 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using UserRole.Models
+@using UserRole.Data
+
+@inject SignInManager<Users> SignInManager
+@inject UserManager<Users> UserManager
+@inject AppDbContext Context
+
+@{
+    Users? currentUser = null;
+    int notificationCount = 0;
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        currentUser = await UserManager.GetUserAsync(User);
+
+        if (currentUser != null)
+        {
+            notificationCount = await Context.Notifications
+                .CountAsync(x => x.UserId == currentUser.Id && !x.IsRead);
+        }
+    }
+}
+
+<ul class="navbar-nav ms-auto align-items-center gap-2">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+
+            <a asp-controller="Profile"
+               asp-action="Index"
+               class="nav-link nav-modern d-flex align-items-center">
+
+                <div class="position-relative me-2">
+
+                    <img src="@(string.IsNullOrWhiteSpace(currentUser?.ProfilePicture)
+                                                     ? "/images/default-user.png"
+                                                     : currentUser.ProfilePicture)"
+                         class="rounded-circle profile-avatar" />
+
+                    
+
+                </div>
+
+                <div class="d-none d-lg-block">
+
+                    <div class="fw-bold text-dark">
+                        @(currentUser?.FullName ?? "User")
+                    </div>
+
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        <small class="text-muted">
+                            @currentUser?.Department
+                        </small>
+                    }
+
+                </div>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link nav-modern"
+               asp-controller="Profile"
+               asp-action="Search">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <span class="d-none d-lg-inline ms-1">
+                    Search
+                </span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link nav-modern"
+               asp-controller="Follow"
+               asp-action="Requests">
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                <span class="d-none d-lg-inline ms-1">
+                    Requests
+                </span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link nav-modern"
+               asp-controller="Message"
+               asp-action="Inbox">
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+                <span class="d-none d-lg-inline ms-1">
+                    Messages
+                </span>
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a class="nav-link nav-modern position-relative"
+               asp-controller="Notification"
+               asp-action="Index">
+
+                <i class="fa-solid fa-bell bell-icon"></i>
+
+                @if (notificationCount > 0)
+                {
+                    <span class="notification-badge">
+
+                        @notificationCount
+
+                    </span>
+                }
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <form asp-controller="Account"
+                  asp-action="Logout"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    <span class="d-none d-lg-inline ms-1">
+                        Logout
+                    </span>
+
+                </button>
+
+            </form>
+
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+
+            <a asp-controller="Account"
+               asp-action="Login"
+               class="btn btn-login me-2">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+                Login
+
+            </a>
+
+        </li>
+
+        <li class="nav-item">
+
+            <a asp-controller="Account"
+               asp-action="Register"
+               class="btn btn-register">
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                Register
+
+            </a>
+
+        </li>
+    }
+
+</ul>
+
+<style>
+
+    .profile-avatar {
+        width: 45px;
+        height: 45px;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 8px 25px rgba(0,0,0,.15);
+        transition: .35s;
+    }
+
+        .profile-avatar:hover {
+            transform: scale(1.08) rotate(5deg);
+        }
+
+    
+
+    @@keyframes pulseOnline {
+
+        0% {
+            box-shadow: 0 0 0 0 rgba(34,197,94,.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 12px rgba(34,197,94,0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(34,197,94,0);
+        }
+    }
+
+    .nav-modern {
+        background: white;
+        border-radius: 18px;
+        padding: 10px 18px !important;
+        transition: .35s;
+        box-shadow: 0 8px 22px rgba(0,0,0,.06);
+    }
+
+        .nav-modern:hover {
+            transform: translateY(-4px);
+            background: #eef4ff;
+        }
+
+    @@keyframes .bell-icon {
+        font-size: 20px;
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: 4px;
+        right: 2px;
+        background: linear-gradient(135deg,#ff416c,#ff4b2b);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 7px;
+        border-radius: 30px;
+        animation: shakeBell 1.8s infinite;
+    }
+
+    @@keyframes shakeBell {
+
+        0%, 100% {
+            transform: rotate(0deg);
+        }
+
+        20% {
+            transform: rotate(15deg);
+        }
+
+        40% {
+            transform: rotate(-15deg);
+        }
+
+        60% {
+            transform: rotate(10deg);
+        }
+
+        80% {
+            transform: rotate(-10deg);
+        }
+    }
+
+    .btn-login {
+        border-radius: 50px;
+        padding: 10px 22px;
+        font-weight: 700;
+        background: white;
+        color: #A8D1A3;
+        border: 2px solid #A8D1A3;
+        transition: .35s;
+    }
+
+        .btn-login:hover {
+            background: #A8D1A3;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+    .btn-register {
+        border-radius: 50px;
+        padding: 10px 22px;
+        font-weight: 700;
+        background: linear-gradient(135deg,#6E9E6A,#7c3aed);
+        color: white;
+        border: none;
+        box-shadow: 0 12px 25px rgba(99,102,241,.35);
+        transition: .35s;
+    }
+
+        .btn-register:hover {
+            transform: translateY(-4px) scale(1.05);
+            color: white;
+        }
+
+    .btn-logout {
+        border: none;
+        border-radius: 50px;
+        padding: 10px 22px;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(135deg,#ef4444,#dc2626);
+        box-shadow: 0 12px 25px rgba(239,68,68,.35);
+        transition: .35s;
+    }
+
+        .btn-logout:hover {
+            transform: translateY(-4px);
+            color: white;
+        }
+
+</style>

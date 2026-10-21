@@ -1,0 +1,364 @@
+﻿@model UserRole.Models.Post
+
+@{
+    string fileName = Model.FileName ?? "Unknown File";
+    string filePath = Model.FilePath ?? "";
+    string extension = System.IO.Path.GetExtension(fileName).ToLowerInvariant();
+}
+
+@if (!string.IsNullOrWhiteSpace(filePath))
+{
+    <!-- ========================= -->
+    <!-- IMAGE -->
+    <!-- ========================= -->
+    @if (new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" }.Contains(extension))
+    {
+        <div class="media-card">
+
+            <img src="@filePath"
+            class="media-image"
+            alt="@fileName" />
+
+        </div>
+    }
+    else if (new[] { ".mp4", ".mov", ".avi", ".wmv", ".mkv", ".webm" }.Contains(extension))
+    {
+        <div class="media-card">
+
+            <video controls class="media-video">
+
+                <source src="@filePath" />
+
+                Your browser does not support video.
+
+            </video>
+
+        </div>
+    }
+    else if (extension == ".pdf")
+    {
+        <div class="file-card pdf">
+
+            <i class="fa-solid fa-file-pdf file-icon"></i>
+
+            <h4>@fileName</h4>
+
+            <p>PDF Document</p>
+
+            <iframe src="@filePath" class="pdf-viewer"></iframe>
+
+            <div class="file-buttons">
+
+                <a href="@filePath"
+                target="_blank"
+                class="btn btn-danger">
+
+                    <i class="fa-solid fa-eye"></i>
+                    Open
+
+                </a>
+
+                <a href="@filePath"
+                download
+                class="btn btn-outline-danger">
+
+                    <i class="fa-solid fa-download"></i>
+                    Download
+
+                </a>
+
+            </div>
+
+        </div>
+    }
+    else if (new[] { ".doc", ".docx" }.Contains(extension))
+    {
+        <div class="file-card">
+
+            <i class="fa-solid fa-file-word file-icon text-primary"></i>
+
+            <h4>@fileName</h4>
+
+            <p>Microsoft Word Document</p>
+
+            <div class="file-buttons">
+
+                <a href="@filePath"
+                target="_blank"
+                class="btn btn-primary">
+
+                    <i class="fa-solid fa-eye"></i>
+                    Open
+
+                </a>
+
+                <a href="@filePath"
+                download
+                class="btn btn-outline-primary">
+
+                    <i class="fa-solid fa-download"></i>
+                    Download
+
+                </a>
+
+            </div>
+
+        </div>
+    }
+    else if (new[] { ".xls", ".xlsx" }.Contains(extension))
+    {
+        <div class="file-card">
+
+            <i class="fa-solid fa-file-excel file-icon text-success"></i>
+
+            <h4>@fileName</h4>
+
+            <p>Microsoft Excel Spreadsheet</p>
+
+            <div class="file-buttons">
+
+                <a href="@filePath"
+                   target="_blank"
+                   class="btn btn-success">
+
+                    <i class="fa-solid fa-eye"></i>
+                    Open
+
+                </a>
+
+                <a href="@filePath"
+                   download
+                   class="btn btn-outline-success">
+
+                    <i class="fa-solid fa-download"></i>
+                    Download
+
+                </a>
+
+            </div>
+
+        </div>
+    }
+    else if (new[] { ".ppt", ".pptx" }.Contains(extension))
+    {
+        <div class="file-card">
+
+            <i class="fa-solid fa-file-powerpoint file-icon text-warning"></i>
+
+            <h4>@fileName</h4>
+
+            <p>PowerPoint Presentation</p>
+
+            <div class="file-buttons">
+
+                <a href="@filePath"
+                   target="_blank"
+                   class="btn btn-warning">
+
+                    <i class="fa-solid fa-eye"></i>
+                    Open
+
+                </a>
+
+                <a href="@filePath"
+                   download
+                   class="btn btn-outline-warning">
+
+                    <i class="fa-solid fa-download"></i>
+                    Download
+
+                </a>
+
+            </div>
+
+        </div>
+    }
+    else if (new[] { ".zip", ".rar", ".7z" }.Contains(extension))
+    {
+        <div class="file-card">
+
+            <i class="fa-solid fa-file-zipper file-icon text-secondary"></i>
+
+            <h4>@fileName</h4>
+
+            <p>Compressed Archive</p>
+
+            <div class="file-buttons">
+
+                <a href="@filePath"
+                   download
+                   class="btn btn-secondary">
+
+                    <i class="fa-solid fa-download"></i>
+                    Download Archive
+
+                </a>
+
+            </div>
+
+        </div>
+    }
+    else if (new[] { ".mp3", ".wav", ".ogg", ".aac" }.Contains(extension))
+    {
+        <div class="file-card">
+
+            <i class="fa-solid fa-music file-icon text-info"></i>
+
+            <h4>@fileName</h4>
+
+            <audio controls class="audio-player">
+
+                <source src="@filePath" />
+
+            </audio>
+
+        </div>
+    }
+    else
+    {
+        <div class="file-card">
+
+            <i class="fa-solid fa-file file-icon"></i>
+
+            <h4>@fileName</h4>
+
+            <p>File</p>
+
+            <div class="file-buttons">
+
+                <a href="@filePath"
+                   target="_blank"
+                   class="btn btn-dark">
+
+                    <i class="fa-solid fa-eye"></i>
+                    Open
+
+                </a>
+
+                <a href="@filePath"
+                   download
+                   class="btn btn-outline-dark">
+
+                    <i class="fa-solid fa-download"></i>
+                    Download
+
+                </a>
+
+            </div>
+
+        </div>
+    }
+}
+
+<style>
+
+    .media-card {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 20px;
+        background: #fff;
+        animation: fadeUp .5s ease;
+    }
+
+    .media-image {
+        width: 100%;
+        max-height: 650px;
+        object-fit: cover;
+        transition: .45s;
+        cursor: pointer;
+    }
+
+        .media-image:hover {
+            transform: scale(1.04);
+        }
+
+    .media-video {
+        width: 100%;
+        max-height: 650px;
+        border-radius: 20px;
+        background: black;
+    }
+
+    .file-card {
+        background: #fff;
+        border-radius: 22px;
+        padding: 35px;
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(0,0,0,.08);
+        animation: fadeUp .5s ease;
+        transition: .35s;
+    }
+
+        .file-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(79,70,229,.18);
+        }
+
+    .file-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+    }
+
+    .pdf-viewer {
+        width: 100%;
+        height: 550px;
+        border: none;
+        border-radius: 15px;
+        margin-top: 20px;
+    }
+
+    .file-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 25px;
+    }
+
+    .audio-player {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    @@keyframes fadeUp {
+
+        from {
+            opacity: 0;
+            transform: translateY(25px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media (max-width:768px) {
+
+        .media-image,
+        .media-video {
+            max-height: 350px;
+        }
+
+        .pdf-viewer {
+            height: 350px;
+        }
+
+        .file-card {
+            padding: 25px;
+        }
+
+        .file-icon {
+            font-size: 60px;
+        }
+
+        .file-buttons {
+            flex-direction: column;
+        }
+
+            .file-buttons .btn {
+                width: 100%;
+            }
+    }
+
+</style>

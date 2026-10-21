@@ -1,0 +1,382 @@
+﻿@model UserRole.Models.Post
+
+<div class="modern-post-actions">
+
+    <!-- LIKE -->
+    <form class="action-form likeForm">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="postId"
+               value="@Model.Id" />
+
+        <button type="submit"
+                class="modern-action-btn like-btn">
+
+            <i class="fa-solid fa-heart"></i>
+
+            <span>
+                Like
+            </span>
+
+        </button>
+
+    </form>
+
+
+    <!-- COMMENT -->
+
+    <button type="button"
+            class="modern-action-btn comment-btn"
+            onclick="scrollToComment(@Model.Id)">
+
+        <i class="fa-solid fa-comment"></i>
+        <span>Comment</span>
+
+    </button>
+
+
+    <!-- SHARE -->
+
+    <button type="button"
+            class="modern-action-btn share-btn"
+            onclick="sharePost(@Model.Id)">
+
+        <i class="fa-solid fa-paper-plane"></i>
+        <span>Share</span>
+
+    </button>
+
+
+    <!-- DOWNLOAD -->
+
+    <a asp-controller="Post"
+       asp-action="Download"
+       asp-route-id="@Model.Id"
+       class="modern-action-btn download-btn">
+
+        <i class="fa-solid fa-download"></i>
+        <span>Download</span>
+
+    </a>
+
+
+    @if (User.IsInRole("Admin"))
+    {
+        <form asp-controller="Post"
+              asp-action="Delete"
+              asp-route-id="@Model.Id"
+              method="post"
+              class="action-form">
+
+            @Html.AntiForgeryToken()
+
+            <button type="submit"
+                    class="modern-action-btn delete-btn"
+                    onclick="return confirm('Delete this post?')">
+
+                <i class="fa-solid fa-trash"></i>
+                <span>Delete</span>
+
+            </button>
+
+        </form>
+    }
+
+</div>
+
+
+
+<style>
+
+    .modern-post-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        padding: 18px;
+        background: #fff;
+        border-top: 1px solid #ececec;
+        flex-wrap: wrap;
+    }
+
+    .action-form {
+        flex: 1;
+    }
+
+    .modern-action-btn {
+        flex: 1;
+        width: 100%;
+        height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        text-decoration: none;
+        border-radius: 15px;
+        background: #f8fafc;
+        color: #444;
+        font-size: 15px;
+        font-weight: 700;
+        transition: .35s;
+    }
+
+        .modern-action-btn i {
+            font-size: 18px;
+        }
+
+        .modern-action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0,0,0,.12);
+        }
+
+
+
+    /* LIKE */
+
+    .like-btn:hover {
+        background: #ffe6ea;
+        color: #ff2d55;
+    }
+
+
+
+    /* COMMENT */
+
+    .comment-btn:hover {
+        background: #eaf3ff;
+        color: #2563eb;
+    }
+
+
+
+    /* SHARE */
+
+    .share-btn:hover {
+        background: #e8fff5;
+        color: #16a34a;
+    }
+
+
+
+    /* DOWNLOAD */
+
+    .download-btn:hover {
+        background: #fff8e6;
+        color: #f59e0b;
+    }
+
+
+
+    /* DELETE */
+
+    .delete-btn:hover {
+        background: #ffe7e7;
+        color: #dc2626;
+    }
+
+    .like-btn.liked {
+        background: #ffe8ef;
+        color: #e91e63;
+    }
+
+        .like-btn.liked i {
+            animation: heart .6s;
+        }
+
+    @@keyframes heart {
+
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.4);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+
+    @@media(max-width:768px) {
+
+        .modern-post-actions {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .modern-action-btn {
+            height: 60px;
+        }
+    }
+
+
+
+    @@media(max-width:480px) {
+
+        .modern-post-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+
+</style>
+
+<script>
+
+      
+    function sharePost(postId) {
+
+        fetch("/Post/SharePost?postId=" + postId)
+            .then(r => r.text())
+            .then(html => {
+
+                let modal = document.getElementById("shareModalContainer");
+
+                if (!modal) {
+
+                    modal = document.createElement("div");
+                    modal.id = "shareModalContainer";
+
+                    document.body.appendChild(modal);
+                }
+
+                modal.innerHTML = html;
+
+                const bsModal = new bootstrap.Modal(
+                    document.getElementById("sharePostModal")
+                );
+
+                bsModal.show();
+
+            });
+
+    }
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.querySelectorAll(".likeForm").forEach(function (form) {
+
+            form.addEventListener("submit", function (e) {
+
+                e.preventDefault();
+
+                let token =
+                    form.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                let postId =
+                    form.querySelector('input[name="postId"]').value;
+
+                fetch("/Post/Like", {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type": "application/x-www-form-urlencoded",
+
+                        "RequestVerificationToken": token
+
+                    },
+
+                    body:
+                        "postId=" + postId
+
+                })
+
+                .then(r => r.json())
+
+                .then(data => {
+
+                    if (data.success) {
+
+                        let btn = form.querySelector(".like-btn");
+
+                        btn.classList.add("liked");
+
+                        btn.querySelector("span").innerText =
+
+                            "Liked (" + data.likes + ")";
+
+                    }
+
+                });
+
+            });
+
+        });
+
+    });
+        if (!window.sharePostEventsRegistered) {
+
+        window.sharePostEventsRegistered = true;
+
+        document.addEventListener("click", function (e) {
+
+            if (e.target.closest(".shareBtn")) {
+
+                const btn = e.target.closest(".shareBtn");
+
+                const receiverId = btn.dataset.user;
+                const postId = document.getElementById("sharePostId").value;
+
+                fetch("/Post/SendSharedPost", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+
+                    body:
+                        "receiverId=" + encodeURIComponent(receiverId) +
+                        "&postId=" + encodeURIComponent(postId)
+
+                })
+                .then(r => r.json())
+                .then(data => {
+
+                    if (data.success) {
+
+                        btn.innerHTML = "Sent";
+                        btn.disabled = true;
+                        btn.classList.remove("btn-success");
+                        btn.classList.add("btn-secondary");
+                    }
+
+                });
+
+            }
+
+            if (e.target.id === "shareSearch") {
+
+                e.target.onkeyup = function () {
+
+                    const value = this.value.toLowerCase();
+
+                    document.querySelectorAll(".share-user").forEach(function (item) {
+
+                        item.style.display =
+                            item.innerText.toLowerCase().includes(value)
+                                ? ""
+                                : "none";
+                    });
+
+                };
+
+            }
+
+        });
+
+    }
+       
+    
+
+</script>

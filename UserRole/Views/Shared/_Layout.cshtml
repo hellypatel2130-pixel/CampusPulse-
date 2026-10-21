@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - CampusPulse+</title>
+
+    <script type="importmap"></script>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/css/home.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/UserRole.styles.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- Floating Background -->
+
+    <div class="bg-circle bg1"></div>
+    <div class="bg-circle bg2"></div>
+    <div class="bg-circle bg3"></div>
+
+    <!-- NAVBAR -->
+
+    <header>
+
+        <nav class="navbar navbar-expand-lg custom-navbar">
+
+            <div class="container">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="navbar-brand">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    <span>CampusPulse+</span>
+
+                </a>
+
+                <button class="navbar-toggler"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarContent">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <div class="collapse navbar-collapse"
+                     id="navbarContent">
+
+                    <ul class="navbar-nav mx-auto">
+
+                        <li class="nav-item">
+
+                            <a asp-controller="Home"
+                               asp-action="Index"
+                               class="nav-link">
+
+                                <i class="fa-solid fa-house"></i>
+
+                                Home
+
+                            </a>
+
+                        </li>
+
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+
+                                <a asp-controller="Post"
+                                   asp-action="Feed"
+                                   class="nav-link">
+
+                                    <i class="fa-solid fa-compass"></i>
+
+                                    Feed
+
+                                </a>
+
+                            </li>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+
+                                    <a asp-controller="Post"
+                                       asp-action="Create"
+                                       class="nav-link">
+
+                                        <i class="fa-solid fa-circle-plus"></i>
+
+                                        Create
+
+                                    </a>
+
+                                </li>
+                            }
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+
+                                <a asp-controller="Home"
+                                   asp-action="AdminDashboard"
+                                   class="nav-link">
+
+                                    <i class="fa-solid fa-chart-line"></i>
+
+                                    Admin
+
+                                </a>
+
+                            </li>
+                        }
+
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+
+                                <a asp-controller="Home"
+                                   asp-action="UserDashboard"
+                                   class="nav-link">
+
+                                    <i class="fa-solid fa-user"></i>
+
+                                    Dashboard
+
+                                </a>
+
+                            </li>
+
+                            <li class="nav-item">
+
+                                <a asp-controller="Support"
+                                   asp-action="Create"
+                                   class="nav-link">
+
+                                    <i class="fa-solid fa-headset"></i>
+
+                                    Support
+
+                                </a>
+
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+
+                                <a asp-controller="Support"
+                                   asp-action="AdminTickets"
+                                   class="nav-link">
+
+                                    <i class="fa-solid fa-ticket"></i>
+
+                                    Support Tickets
+
+                                </a>
+
+                            </li>
+                        }
+                    </ul>
+
+                    <partial name="_LoginPartial" />
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+    <!-- PAGE -->
+
+    <main class="page-container">
+
+        @RenderBody()
+
+    </main>
+
+    <!-- FOOTER -->
+
+
+ 
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"></script>
+
+    @await RenderSectionAsync("Scripts", false)
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+</body>
+
+</html>

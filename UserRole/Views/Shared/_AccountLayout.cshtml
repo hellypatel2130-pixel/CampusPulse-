@@ -1,0 +1,536 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8"/>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1"/>
+
+    <title>@ViewData["Title"] • CampusPulse+</title>
+
+    <!-- Bootstrap -->
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+
+    <!-- Google Font -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+
+    <!-- SweetAlert -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Account CSS -->
+
+    <link rel="stylesheet"
+          href="~/css/account.css"
+          asp-append-version="true"/>
+
+</head>
+
+<body>
+
+<!-- ====================================================== -->
+<!-- AUTHENTICATION SCENE -->
+<!-- ====================================================== -->
+
+<div class="auth-scene">
+
+    <!-- Animated Gradient -->
+
+    <div class="gradient-layer"></div>
+
+    <!-- Light Glow -->
+
+    <div class="light-glow glow-1"></div>
+
+    <div class="light-glow glow-2"></div>
+
+    <div class="light-glow glow-3"></div>
+
+    <!-- Glass Blobs -->
+
+    <div class="glass-blob blob-1"></div>
+
+    <div class="glass-blob blob-2"></div>
+
+    <div class="glass-blob blob-3"></div>
+
+    <div class="glass-blob blob-4"></div>
+
+    <!-- Floating Rings -->
+
+    <span class="ring r1"></span>
+
+    <span class="ring r2"></span>
+
+    <span class="ring r3"></span>
+
+    <span class="ring r4"></span>
+
+    <span class="ring r5"></span>
+
+    <!-- Floating Sparkles -->
+
+    <span class="spark s1"></span>
+
+    <span class="spark s2"></span>
+
+    <span class="spark s3"></span>
+
+    <span class="spark s4"></span>
+
+    <span class="spark s5"></span>
+
+    <span class="spark s6"></span>
+
+    <span class="spark s7"></span>
+
+    <span class="spark s8"></span>
+
+    <!-- Floating Icons -->
+
+    <div class="floating-icon icon-book">
+
+        <i class="fa-solid fa-book-open"></i>
+
+    </div>
+
+    <div class="floating-icon icon-cap">
+
+        <i class="fa-solid fa-graduation-cap"></i>
+
+    </div>
+
+    <div class="floating-icon icon-chat">
+
+        <i class="fa-solid fa-comments"></i>
+
+    </div>
+
+    <div class="floating-icon icon-code">
+
+        <i class="fa-solid fa-laptop-code"></i>
+
+    </div>
+
+    <div class="floating-icon icon-pencil">
+
+        <i class="fa-solid fa-pencil"></i>
+
+    </div>
+
+    <div class="floating-icon icon-star">
+
+        <i class="fa-solid fa-star"></i>
+
+    </div>
+
+    <!-- Floating Particles -->
+
+    <div class="particle-layer">
+
+        <span class="particle p1"></span>
+
+        <span class="particle p2"></span>
+
+        <span class="particle p3"></span>
+
+        <span class="particle p4"></span>
+
+        <span class="particle p5"></span>
+
+        <span class="particle p6"></span>
+
+        <span class="particle p7"></span>
+
+        <span class="particle p8"></span>
+
+        <span class="particle p9"></span>
+
+        <span class="particle p10"></span>
+
+    </div>
+
+    <!-- Animation Layer -->
+
+    <div class="animation-stage">
+            <!-- ===================================================== -->
+            <!-- STUDENT ANIMATION LAYER -->
+            <!-- ===================================================== -->
+
+            <div class="student-layer">
+
+                <!-- ================= LEFT STUDENT ================= -->
+
+                <div class="student student-left" id="studentLeft">
+
+                    <div class="student-shadow"></div>
+
+                    <div class="student-body">
+
+                        <!-- Head -->
+
+                        <div class="head">
+
+                            <div class="hair"></div>
+
+                            <div class="face">
+
+                                <span class="eye eye-left"></span>
+
+                                <span class="eye eye-right"></span>
+
+                                <span class="mouth"></span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Neck -->
+
+                        <div class="neck"></div>
+
+                        <!-- Torso -->
+
+                        <div class="torso">
+
+                            <div class="shirt-logo">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+
+                        </div>
+
+                        <!-- Backpack -->
+
+                        <div class="bag"></div>
+
+                        <!-- Left Arm -->
+
+                        <div class="arm arm-left">
+
+                            <div class="forearm"></div>
+
+                            <div class="hand"></div>
+
+                        </div>
+
+                        <!-- Right Arm -->
+
+                        <div class="arm arm-right">
+
+                            <div class="forearm"></div>
+
+                            <div class="hand"></div>
+
+                        </div>
+
+                        <!-- Left Leg -->
+
+                        <div class="leg leg-left">
+
+                            <div class="shoe"></div>
+
+                        </div>
+
+                        <!-- Right Leg -->
+
+                        <div class="leg leg-right">
+
+                            <div class="shoe"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ================= RIGHT STUDENT ================= -->
+
+                <div class="student student-right" id="studentRight">
+
+                    <div class="student-shadow"></div>
+
+                    <div class="student-body">
+
+                        <!-- Head -->
+
+                        <div class="head">
+
+                            <div class="hair hair-long"></div>
+
+                            <div class="face">
+
+                                <span class="eye eye-left"></span>
+
+                                <span class="eye eye-right"></span>
+
+                                <span class="mouth smile"></span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Neck -->
+
+                        <div class="neck"></div>
+
+                        <!-- Torso -->
+
+                        <div class="torso girl-shirt">
+
+                            <div class="shirt-logo">
+                                <i class="fa-solid fa-book-open"></i>
+                            </div>
+
+                        </div>
+
+                        <!-- Backpack -->
+
+                        <div class="bag"></div>
+
+                        <!-- Left Arm -->
+
+                        <div class="arm arm-left">
+
+                            <div class="forearm"></div>
+
+                            <div class="hand"></div>
+
+                        </div>
+
+                        <!-- Right Arm -->
+
+                        <div class="arm arm-right">
+
+                            <div class="forearm"></div>
+
+                            <div class="hand"></div>
+
+                        </div>
+
+                        <!-- Left Leg -->
+
+                        <div class="leg leg-left">
+
+                            <div class="shoe"></div>
+
+                        </div>
+
+                        <!-- Right Leg -->
+
+                        <div class="leg leg-right">
+
+                            <div class="shoe"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- ===================================================== -->
+            <!-- NOTICE BOARD -->
+            <!-- ===================================================== -->
+
+            <div class="notice-board" id="noticeBoard">
+
+                <div class="board-stick left-stick"></div>
+
+                <div class="board-stick right-stick"></div>
+
+                <div class="board-panel">
+
+                    <div class="board-pin pin-left"></div>
+
+                    <div class="board-pin pin-right"></div>
+
+                    <h4 id="boardTitle">
+
+                        Welcome 👋
+
+                    </h4>
+
+                    <p id="boardMessage">
+
+                        Please login to continue.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- DUST PARTICLES -->
+            <!-- ===================================================== -->
+
+            <div class="dust-layer">
+
+                <span class="dust dust1"></span>
+
+                <span class="dust dust2"></span>
+
+                <span class="dust dust3"></span>
+
+                <span class="dust dust4"></span>
+
+                <span class="dust dust5"></span>
+
+                <span class="dust dust6"></span>
+
+                <span class="dust dust7"></span>
+
+                <span class="dust dust8"></span>
+
+                <span class="dust dust9"></span>
+
+                <span class="dust dust10"></span>
+
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- PUSH IMPACT -->
+            <!-- ===================================================== -->
+
+            <div class="push-impact">
+
+                <span class="impact-ring ring1"></span>
+
+                <span class="impact-ring ring2"></span>
+
+                <span class="impact-ring ring3"></span>
+
+                <span class="impact-line line1"></span>
+
+                <span class="impact-line line2"></span>
+
+                <span class="impact-line line3"></span>
+
+                <span class="impact-line line4"></span>
+
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- MOTION BLUR -->
+            <!-- ===================================================== -->
+
+            <div class="motion-layer">
+
+                <div class="motion motion-left"></div>
+
+                <div class="motion motion-right"></div>
+
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- AUTH CARD STAGE -->
+            <!-- ===================================================== -->
+
+            <section class="auth-stage">
+
+                <div class="auth-wrapper">
+
+                    @RenderBody()
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- END ANIMATION STAGE -->
+
+    </div>
+
+    <!-- END AUTH SCENE -->
+        <!-- ===================================================== -->
+    <!-- CURSOR GLOW -->
+    <!-- ===================================================== -->
+
+    <div class="cursor-glow"></div>
+
+    <!-- ===================================================== -->
+    <!-- PAGE TRANSITION -->
+    <!-- ===================================================== -->
+
+    <div class="page-transition">
+
+        <div class="transition-circle tc1"></div>
+
+        <div class="transition-circle tc2"></div>
+
+        <div class="transition-circle tc3"></div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- SCREEN OVERLAY -->
+    <!-- ===================================================== -->
+
+    <div class="screen-overlay"></div>
+
+    <!-- ===================================================== -->
+    <!-- LOADING OVERLAY -->
+    <!-- ===================================================== -->
+
+    <div class="loading-overlay" id="loadingOverlay">
+
+        <div class="loader-box">
+
+            <div class="loader-ring"></div>
+
+            <div class="loader-ring delay1"></div>
+
+            <div class="loader-ring delay2"></div>
+
+            <h5>Preparing Experience...</h5>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- BACKGROUND GLOW -->
+    <!-- ===================================================== -->
+
+    <div class="bg-glow glow-left"></div>
+
+    <div class="bg-glow glow-right"></div>
+
+    <!-- ===================================================== -->
+    <!-- END OF SCENE -->
+    <!-- ===================================================== -->
+
+</div>
+
+<!-- ===================================================== -->
+<!-- JAVASCRIPT -->
+<!-- ===================================================== -->
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="~/js/site.js"
+        asp-append-version="true"></script>
+
+<script src="~/js/auth.js"
+        asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

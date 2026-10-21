@@ -1,0 +1,653 @@
+﻿@model UserRole.Models.Post
+
+<div id="commentBox-@Model.Id" class="comments-wrapper">
+
+    <!-- ============================= -->
+    <!-- HEADER -->
+    <!-- ============================= -->
+
+    <div class="comments-header">
+
+        <div class="d-flex align-items-center">
+
+            <div class="comment-icon">
+
+                <i class="fa-solid fa-comments"></i>
+
+            </div>
+
+            <div class="ms-3">
+
+                <h5 class="mb-0 fw-bold">
+                    Comments
+                </h5>
+
+                <small class="text-muted">
+                    @(Model.Comments?.Count ?? 0) Conversations
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ============================= -->
+    <!-- COMMENT LIST -->
+    <!-- ============================= -->
+
+    <div class="comments-list">
+
+        @if (Model.Comments != null && Model.Comments.Any())
+        {
+            var comments = Model.Comments
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
+
+            <!-- Latest 3 Comments -->
+            @foreach (var comment in comments.Take(3))
+            {
+                <div class="comment-card">
+
+                    <img src="@(string.IsNullOrWhiteSpace(comment.Users?.ProfilePicture)
+                                                 ? "/images/default-user.png"
+                                                 : comment.Users.ProfilePicture)"
+                         class="comment-avatar" />
+
+                    <div class="comment-content">
+
+                        <div class="comment-top">
+
+                            <div>
+
+                                <h6>
+                                    @(comment.Users?.FullName ?? "Unknown User")
+                                </h6>
+
+                                <span>
+                                    @comment.CreatedAt.ToString("dd MMM yyyy • hh:mm tt")
+                                </span>
+
+                            </div>
+
+                            <button class="comment-more">
+
+                                <i class="fa-solid fa-ellipsis"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div class="comment-message">
+
+                            @comment.Message
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+            <!-- Remaining Comments (Hidden) -->
+            @if (comments.Count > 3)
+            {
+                <div id="moreComments-@Model.Id" style="display:none;">
+
+                    @foreach (var comment in comments.Skip(3))
+                    {
+                        <div class="comment-card">
+
+                            <img src="@(string.IsNullOrWhiteSpace(comment.Users?.ProfilePicture)
+                                                                 ? "/images/default-user.png"
+                                                                 : comment.Users.ProfilePicture)"
+                                 class="comment-avatar" />
+
+                            <div class="comment-content">
+
+                                <div class="comment-top">
+
+                                    <div>
+
+                                        <h6>
+                                            @(comment.Users?.FullName ?? "Unknown User")
+                                        </h6>
+
+                                        <span>
+                                            @comment.CreatedAt.ToString("dd MMM yyyy • hh:mm tt")
+                                        </span>
+
+                                    </div>
+
+                                    <button class="comment-more">
+
+                                        <i class="fa-solid fa-ellipsis"></i>
+
+                                    </button>
+
+                                </div>
+
+                                <div class="comment-message">
+
+                                    @comment.Message
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+                <div class="view-more-comments">
+
+                    <button class="btn-view-comments"
+                            onclick="toggleComments(@Model.Id,this)">
+
+                        View all @(comments.Count - 3) comments
+
+                    </button>
+
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-comments">
+
+                <i class="fa-regular fa-comments"></i>
+
+                <h5>No comments yet</h5>
+
+                <p>
+
+                    Start the conversation and be the first to comment.
+
+                </p>
+
+            </div>
+        }
+
+    </div>
+
+    <!-- COMMENT FORM STARTS HERE -->
+    <!-- ============================= -->
+    <!-- COMMENT FORM -->
+    <!-- ============================= -->
+
+    <form asp-controller="Post"
+          asp-action="Comment"
+          method="post"
+          class="comment-form ajax-comment-form">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="postId"
+               value="@Model.Id" />
+
+        <div class="comment-input-wrapper">
+
+            <input type="text"
+                   name="message"
+                   maxlength="500"
+                   class="comment-input"
+                   placeholder="Write something amazing..."
+                   required />
+
+            <button type="submit"
+                    class="comment-send">
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<!-- ============================= -->
+<!-- STYLE START -->
+<!-- ============================= -->
+
+<style>
+    .comments-wrapper {        
+     margin-top: 20px;
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(0,0,0,.08);
+    }
+
+    .comments-header {
+    padding: 22px 28px;
+    background: linear-gradient(135deg,#6E9E6A,#7c3aed);
+    color: #fff;
+    }
+
+    .comment-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.18);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    backdrop-filter: blur(15px);
+    }
+
+    .comments-list {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    }
+
+    .comment-card {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    animation: slideComment .45s ease;
+    transition: .35s;
+    }
+
+    .comment-card:hover {
+    transform: translateY(-4px);
+    }
+
+    .comment-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #6E9E6A;
+    box-shadow: 0 8px 18px rgba(99,102,241,.25);
+    }
+
+    .comment-content {
+    flex: 1;
+    background: #f8faff;
+    border-radius: 20px;
+    padding: 18px;
+    transition: .35s;
+    border: 1px solid rgba(99,102,241,.08);
+    }
+
+    .comment-card:hover .comment-content {
+    background: #eef2ff;
+    box-shadow: 0 10px 25px rgba(99,102,241,.15);
+    }
+
+    .comment-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+    .comment-top h6 {
+    margin: 0;
+    font-weight: 700;
+    color: #222;
+    }
+
+    .comment-top span {
+    font-size: 13px;
+    color: #777;
+    }
+
+    .comment-more {
+    border: none;
+    background: none;
+    color: #888;
+    transition: .3s;
+    }
+
+    .comment-more:hover {
+    transform: rotate(90deg);
+    color: #6E9E6A;
+    }
+
+    .comment-message {
+    margin-top: 12px;
+    color: #444;
+    line-height: 1.7;
+    }
+
+    .comment-form {
+    padding: 22px;
+    border-top: 1px solid #eee;
+    background: #fbfbfd;
+    }
+
+    .comment-input-wrapper {
+    display: flex;
+    gap: 12px;
+    }
+
+    .comment-input {
+    flex: 1;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 22px;
+    background: #eef2ff;
+    transition: .35s;
+    outline: none;
+    font-size: 15px;
+    }
+
+    .comment-input:focus {
+    background: #fff;
+    box-shadow: 0 0 0 5px rgba(99,102,241,.15);
+    }
+
+    .comment-send {
+    width: 58px;
+    height: 58px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#6E9E6A,#7c3aed);
+    color: #fff;
+    font-size: 20px;
+    transition: .35s;
+    box-shadow: 0 12px 30px rgba(99,102,241,.35);
+    }
+
+    .comment-send:hover {
+    transform: translateY(-5px) rotate(-18deg) scale(1.08);
+    }
+
+    .empty-comments {
+    text-align: center;
+    padding: 50px 20px;
+    }
+
+    .empty-comments i {
+    font-size: 70px;
+    color: #6E9E6A;
+    margin-bottom: 20px;
+    animation: floatIcon 2s infinite;
+    }
+
+    .empty-comments h5 {
+    font-weight: 700;
+    }
+
+    .empty-comments p {
+    color: #777;
+    }
+
+    @@keyframes slideComment {
+    from {
+    opacity: 0;
+    transform: translateY(25px);
+    }
+
+    to {
+    opacity: 1;
+    transform: translateY(0);
+    }
+    }
+
+    @@keyframes floatIcon {
+    0%, 100% {
+    transform: translateY(0);
+    }
+
+    50% {
+    transform: translateY(-10px);
+    }
+    }
+
+    @@media(max-width:768px) {
+    .comment-card {
+    flex-direction: column;
+    }
+
+    .comment-avatar {
+    width: 48px;
+    height: 48px;
+    }
+
+    .comment-input-wrapper {
+    flex-direction: column;
+    }
+
+    .comment-send {
+    width: 100%;
+    border-radius: 50px;
+    height: 52px;
+    }
+    }
+    /* ===========================================
+   INSTAGRAM STYLE VIEW MORE COMMENTS
+=========================================== */
+
+.view-more-comments{
+
+    text-align:center;
+
+    margin-top:18px;
+
+}
+
+.btn-view-comments{
+
+    border:none;
+
+    background:none;
+
+    color:#6E9E6A;
+
+    font-weight:700;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    padding:8px 16px;
+
+    border-radius:30px;
+
+}
+
+.btn-view-comments:hover{
+
+    background:#eef8ee;
+
+    color:#4d7f49;
+
+}
+
+#moreComments{
+
+    margin-top:12px;
+
+}
+
+/* Smooth animation */
+
+#moreComments-1,
+[id^="moreComments-"]{
+
+    animation:showComments .35s ease;
+
+}
+
+@@keyframes showComments{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-15px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+    </style>
+<script>
+
+        // ==============================
+        // SHOW / HIDE COMMENTS
+        // ==============================
+
+        function toggleComments(postId, btn) {
+
+            const moreComments = document.getElementById("moreComments-" + postId);
+
+            if (moreComments.style.display === "none" || moreComments.style.display === "") {
+
+                moreComments.style.display = "block";
+
+                btn.innerHTML = "Hide comments";
+
+            }
+            else {
+
+                moreComments.style.display = "none";
+
+                const total = moreComments.children.length;
+
+                btn.innerHTML = "View all " + total + " comments";
+
+            }
+
+        }
+
+        // ==============================
+        // AJAX COMMENT
+        // ==============================
+
+        document.addEventListener("submit", async function (e) {
+
+            const form = e.target;
+
+            if (!form.classList.contains("ajax-comment-form"))
+                return;
+
+            e.preventDefault();
+
+            const button = form.querySelector(".comment-send");
+            const input = form.querySelector(".comment-input");
+
+            button.disabled = true;
+
+            try {
+
+                const response = await fetch(form.action, {
+
+                    method: "POST",
+
+                    body: new FormData(form)
+
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+
+                    const wrapper = form.closest(".comments-wrapper");
+
+                    const list = wrapper.querySelector(".comments-list");
+
+                    const empty = list.querySelector(".empty-comments");
+
+                    if (empty)
+                        empty.remove();
+
+                    // Update total comments count
+                    wrapper.querySelector(".text-muted").innerHTML =
+                        result.comments + " Conversations";
+
+                    // Add newest comment at top
+                    list.insertAdjacentHTML("afterbegin", `
+
+    <div class="comment-card">
+
+        <img src="${result.avatar}"
+             class="comment-avatar" />
+
+        <div class="comment-content">
+
+            <div class="comment-top">
+
+                <div>
+
+                    <h6>${result.user}</h6>
+
+                    <span>${result.date}</span>
+
+                </div>
+
+                <button class="comment-more">
+
+                    <i class="fa-solid fa-ellipsis"></i>
+
+                </button>
+
+            </div>
+
+            <div class="comment-message">
+
+                ${result.text}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    `);
+
+                    // Keep only latest 3 visible
+                    const cards = list.querySelectorAll(".comment-card");
+
+                    if (cards.length > 3) {
+
+                        const hiddenBox = wrapper.querySelector("[id^='moreComments-']");
+
+                        if (hiddenBox) {
+
+                            hiddenBox.prepend(cards[3]);
+
+                        }
+
+                    }
+
+                    input.value = "";
+
+                    input.focus();
+
+                }
+
+            }
+            catch (err) {
+
+                console.error(err);
+
+                alert("Unable to post comment.");
+
+            }
+            finally {
+
+                button.disabled = false;
+
+            }
+
+        });
+
+</script>
