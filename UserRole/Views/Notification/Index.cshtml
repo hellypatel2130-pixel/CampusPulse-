@@ -1,1 +1,313 @@
+﻿@model List<UserRole.Models.Notification>
 
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+
+    body {
+        background: #eef2f7;
+    }
+
+    .notification-wrapper {
+        max-width: 1100px;
+        margin: 40px auto;
+    }
+
+    .notification-card {
+        background: #fff;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 20px 45px rgba(0,0,0,.08);
+    }
+
+    .notification-header {
+        background: linear-gradient(135deg,#A8D1A3,#7c3aed);
+        color: white;
+        padding: 35px;
+    }
+
+        .notification-header h2 {
+            margin: 0;
+            font-weight: 800;
+            font-size: 34px;
+        }
+
+        .notification-header p {
+            margin-top: 10px;
+            opacity: .9;
+        }
+
+    .notification-body {
+        padding: 30px;
+    }
+
+    .notification-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 22px;
+        border-radius: 22px;
+        background: white;
+        margin-bottom: 18px;
+        transition: .35s;
+        border: 1px solid #edf2f7;
+        text-decoration: none;
+        color: #111827;
+    }
+
+        .notification-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(79,70,229,.12);
+            text-decoration: none;
+            color: #111827;
+        }
+
+    .notification-unread {
+        background: #eef2ff;
+        border-left: 5px solid #A8D1A3;
+    }
+
+    .notification-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        color: white;
+        background: linear-gradient(135deg,#A8D1A3,#6E9E6A);
+        flex-shrink: 0;
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .notification-message {
+        color: #64748b;
+        line-height: 1.7;
+    }
+
+    .notification-time {
+        color: #94a3b8;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="notification-wrapper">
+
+    <div class="notification-card">
+
+        <div class="notification-header">
+
+            <h2>
+
+                <i class="fa-solid fa-bell"></i>
+
+                Notifications
+
+            </h2>
+
+            <p>
+
+                Stay updated with all campus activities and alerts.
+
+            </p>
+
+        </div>
+
+        <div class="notification-body">
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+
+                    <div style="font-size:80px;color:#c7d2fe;">
+
+                        <i class="fa-regular fa-bell-slash"></i>
+
+                    </div>
+
+                    <h3 class="fw-bold mt-4">
+
+                        No Notifications
+
+                    </h3>
+
+                    <p class="text-muted">
+
+                        You're all caught up! New notifications will appear here.
+
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    var css = item.IsRead
+                        ? "notification-item"
+                        : "notification-item notification-unread";
+
+                    if (!string.IsNullOrWhiteSpace(item.Url))
+                    {
+                        <a asp-controller="Notification"
+                           asp-action="Open"
+                           asp-route-id="@item.Id"
+                           class="@css">
+
+                            <div class="notification-icon">
+
+                                <i class="fa-solid fa-bell"></i>
+
+                            </div>
+
+                            <div class="notification-content">
+
+                                <div class="notification-title">
+
+                                    @item.Title
+
+                                </div>
+
+                                <div class="notification-message">
+
+                                    @item.Message
+
+                                </div>
+
+                                <div class="notification-time">
+
+                                    <i class="fa-regular fa-clock"></i>
+
+                                    @item.CreatedAt.ToString("dd MMM yyyy • hh:mm tt")
+
+                                </div>
+
+                            </div>
+
+                            @if (!item.IsRead)
+                            {
+                                <span class="badge bg-primary rounded-pill">
+
+                                    New
+
+                                </span>
+                            }
+
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="@css">
+
+                            <div class="notification-icon">
+
+                                <i class="fa-solid fa-bell"></i>
+
+                            </div>
+
+                            <div class="notification-content">
+
+                                <div class="notification-title">
+
+                                    @item.Title
+
+                                </div>
+
+                                <div class="notification-message">
+
+                                    @item.Message
+
+                                </div>
+
+                                <div class="notification-time">
+
+                                    <i class="fa-regular fa-clock"></i>
+
+                                    @item.CreatedAt.ToString("dd MMM yyyy • hh:mm tt")
+
+                                </div>
+
+                            </div>
+
+                            @if (!item.IsRead)
+                            {
+                                <span class="badge bg-primary rounded-pill">
+
+                                    New
+
+                                </span>
+                            }
+
+                        </div>
+                    }
+                }
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .notification-item {
+        animation: fadeNotification .45s ease;
+    }
+
+    @@keyframes fadeNotification {
+
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media(max - width:768px) {
+
+        .notification-header {
+            padding: 25px;
+        }
+
+            .notification-header h2 {
+                font-size: 28px;
+            }
+
+        .notification-item {
+            gap: 15px;
+            padding: 18px;
+        }
+
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+        }
+
+        .notification-title {
+            font-size: 16px;
+        }
+    }
+
+</style>
+<partial name="_Footer" />
