@@ -1,0 +1,552 @@
+﻿@model List<UserRole.Models.Follow>
+
+@{
+    ViewData["Title"] = "Inbox";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
+
+<style>
+
+    body {
+        background: linear-gradient(135deg,#eef4ff,#f8fbff);
+    }
+
+    /*=============================
+        WRAPPER
+    =============================*/
+
+    .inbox-wrapper {
+        max-width: 1200px;
+        margin: auto;
+        padding: 40px 15px 60px;
+    }
+
+    /*=============================
+        HEADER
+    =============================*/
+
+    .inbox-header {
+        background: linear-gradient(135deg,#A8D1A3,#7c3aed);
+        border-radius: 28px;
+        padding: 35px;
+        color: white;
+        box-shadow: 0 20px 45px rgba(79,70,229,.25);
+        margin-bottom: 30px;
+    }
+
+    .inbox-title {
+        font-size: 34px;
+        font-weight: 800;
+    }
+
+    .inbox-subtitle {
+        opacity: .9;
+        margin-top: 8px;
+    }
+
+    /*=============================
+        MAIN CARD
+    =============================*/
+
+    .chat-container {
+        background: white;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0,0,0,.08);
+    }
+
+    /*=============================
+        SIDEBAR
+    =============================*/
+
+    .chat-sidebar {
+        background: #fbfcff;
+        min-height: 700px;
+        border-right: 1px solid #edf2f7;
+        padding: 25px;
+    }
+
+    /*=============================
+        SEARCH
+    =============================*/
+
+    .search-box {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+        .search-box input {
+            border: none;
+            background: #eef2ff;
+            border-radius: 14px;
+            padding: 14px 18px 14px 48px;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 16px;
+            color: #6E9E6A;
+        }
+
+    /*=============================
+        CONVERSATION
+    =============================*/
+
+    .chat-user {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 16px;
+        border-radius: 18px;
+        margin-bottom: 10px;
+        transition: .3s;
+        text-decoration: none;
+        color: #1f2937;
+    }
+
+        .chat-user:hover {
+            background: #eef2ff;
+            transform: translateX(6px);
+            text-decoration: none;
+        }
+
+    .user-avatar {
+        position: relative;
+    }
+
+        .user-avatar img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 8px 18px rgba(0,0,0,.12);
+        }
+
+    .online {
+        width: 15px;
+        height: 15px;
+        background: #22c55e;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 2px;
+        right: 4px;
+        border: 3px solid white;
+    }
+
+    .user-name {
+        font-size: 17px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .user-last {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .unread {
+        margin-left: auto;
+        background: #A8D1A3;
+        color: white;
+        min-width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+</style>
+
+<div class="inbox-wrapper">
+
+    <!-- HEADER -->
+
+    <div class="inbox-header">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+            <div>
+
+                <div class="inbox-title">
+
+                    <i class="fa-solid fa-comments"></i>
+
+                    Messages
+
+                </div>
+
+                <div class="inbox-subtitle">
+
+                    Chat with your classmates and faculty members.
+
+                </div>
+
+            </div>
+
+            <a asp-controller="Notification"
+               asp-action="Index"
+               class="btn btn-light rounded-pill px-4">
+
+                <i class="fa-solid fa-bell"></i>
+
+                Notifications
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="chat-container">
+
+        <div class="row g-0">
+
+            <!-- LEFT PANEL -->
+
+            <div class="col-lg-4">
+
+                <div class="chat-sidebar">
+
+                    <div class="search-box">
+
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text"
+                               id="searchConversation"
+                               placeholder="Find someone to chat..." />
+                    </div>
+                    @if (!Model.Any())
+                    {
+                        <div class="text-center py-5">
+
+                            <div style="font-size:70px;color:#c7d2fe;">
+
+                                <i class="fa-regular fa-comments"></i>
+
+                            </div>
+
+                            <h5 class="fw-bold mt-3">
+
+                                No Conversations Yet
+
+                            </h5>
+
+                            <p class="text-muted">
+
+                                Follow students to start chatting.
+
+                            </p>
+
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <a asp-action="Chat"
+                               asp-route-userId="@item.FollowingId"
+                               class="chat-user conversation-item">
+
+                                <div class="user-avatar">
+
+                                    <img src="@(string.IsNullOrWhiteSpace(item.Following?.ProfilePicture)
+                                                 ? "/images/default-user.png"
+                                                 : item.Following.ProfilePicture)" />
+
+                                    @if (item.Following != null && item.Following.IsOnline)
+                                    {
+                                        <span class="online"></span>
+                                    }
+
+                                </div>
+                                <div>
+
+                                    <div class="user-name">
+
+                                        @(item.Following?.FullName ?? "Unknown User")
+
+                                    </div>
+
+                                    <div class="user-last">
+
+                                        @if (item.Following != null)
+                                        {
+                                            if (item.Following.IsOnline)
+                                            {
+                                                <span style="color:#22c55e;font-weight:600;">
+                                                    Online
+                                                </span>
+                                            }
+                                            else if (item.Following.LastSeen != null)
+                                            {
+                                                <span>
+                                                    Last seen @item.Following.LastSeen.Value.ToString("dd MMM hh:mm tt")
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>
+                                                    Offline
+                                                </span>
+                                            }
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                                <div class="unread">
+
+                                    <i class="fa-solid fa-angle-right"></i>
+
+                                </div>
+
+                            </a>
+                        }
+                        <div id="noConversationFound"
+                             class="text-center py-5"
+                             style="display:none;">
+
+                            <div style="font-size:70px;color:#c7d2fe;">
+
+                                <i class="fa-solid fa-magnifying-glass"></i>
+
+                            </div>
+
+                            <h5 class="fw-bold mt-3">
+
+                                No Matching chat partner
+
+                            </h5>
+
+                            <p class="text-muted">
+
+                                We couldn't find any member matching your search.<br />
+                                Try another name or clear the search.
+
+                            </p>
+
+                            <button class="btn btn-primary rounded-pill px-4 mt-3"
+                                    type="button"
+                                    onclick="clearConversationSearch()">
+
+                                <i class="fa-solid fa-rotate-left"></i>
+
+                                Clear Search
+
+                            </button>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE -->
+
+            <div class="col-lg-8">
+
+                <div class="d-flex flex-column justify-content-center align-items-center h-100 p-5">
+
+                    <div class="mb-4">
+
+                        <div style="
+                            width:150px;
+                            height:150px;
+                            border-radius:50%;
+                            background:linear-gradient(135deg,#A8D1A3,#7c3aed);
+                            display:flex;
+                            justify-content:center;
+                            align-items:center;
+                            color:white;
+                            font-size:60px;
+                            box-shadow:0 20px 45px rgba(79,70,229,.25);">
+
+                            <i class="fa-solid fa-comments"></i>
+
+                        </div>
+
+                    </div>
+
+                    <h2 class="fw-bold mb-3">
+
+                        Welcome to Messages
+
+                    </h2>
+
+                    <p class="text-muted text-center mb-4"
+                       style="max-width:520px;">
+
+                        Select any conversation from the left panel to
+                        start chatting instantly with your classmates.
+                        Fast, secure and beautifully designed.
+
+                    </p>
+
+                    <div class="row text-center w-100 mt-3">
+
+                        <div class="col-md-4 mb-3">
+
+                            <div class="p-4 rounded-4 shadow-sm bg-white">
+
+                                <i class="fa-solid fa-lock fa-2x text-primary mb-3"></i>
+
+                                <h6 class="fw-bold">
+
+                                    Secure Chat
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <div class="p-4 rounded-4 shadow-sm bg-white">
+
+                                <i class="fa-solid fa-bolt fa-2x text-warning mb-3"></i>
+
+                                <h6 class="fw-bold">
+
+                                    Fast Delivery
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <div class="p-4 rounded-4 shadow-sm bg-white">
+
+                                <i class="fa-solid fa-user-group fa-2x text-success mb-3"></i>
+
+                                <h6 class="fw-bold">
+
+                                    Campus Community
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .chat-user {
+        animation: slideIn .45s ease;
+    }
+
+    @@keyframes slideIn {
+
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@media(max - width:991px) {
+
+        .chat-sidebar {
+            min-height: auto;
+            border-right: none;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .chat-container {
+            border-radius: 24px;
+        }
+    }
+
+</style>
+<script>
+
+    const conversationSearch =
+        document.getElementById("searchConversation");
+
+    function clearConversationSearch() {
+
+        conversationSearch.value = "";
+
+        conversationSearch.dispatchEvent(new Event("keyup"));
+
+        conversationSearch.focus();
+
+    }
+
+    if (conversationSearch) {
+
+        conversationSearch.addEventListener("keyup", function () {
+
+            const value = this.value.toLowerCase().trim();
+
+            const users =
+                document.querySelectorAll(".conversation-item");
+
+            let visible = 0;
+
+            users.forEach(function (user) {
+
+                if (user.innerText.toLowerCase().includes(value)) {
+
+                    user.style.display = "";
+
+                    visible++;
+
+                }
+                else {
+
+                    user.style.display = "none";
+
+                }
+
+            });
+
+            const empty =
+                document.getElementById("noConversationFound");
+
+            if (value !== "" && visible === 0) {
+
+                empty.style.display = "block";
+
+            }
+            else {
+
+                empty.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+</script>
+<partial name="_Footer" />

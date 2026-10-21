@@ -1,1 +1,1028 @@
+﻿@model List<UserRole.Models.Message>
 
+@{
+    var otherUser = ViewBag.OtherUser as UserRole.Models.Users;
+    ViewData["Title"] = "Chat";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+
+<style>
+
+    body {
+    background: #eef2f7;
+    font-family: 'Poppins',sans-serif;
+    }
+
+    .chat-wrapper {
+    max-width: 1200px;
+    margin: 40px auto;
+    }
+
+    .chat-card {
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,.08);
+    }
+
+    .chat-header {
+    background: linear-gradient(135deg,#A8D1A3,#7c3aed);
+    color: #fff;
+    padding: 22px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+    .user-info {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    }
+
+    .user-avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(255,255,255,.35);
+    }
+
+    .user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }
+
+
+    .chat-header h4 {
+    margin: 0;
+    font-weight: 700;
+    }
+
+    .chat-header small {
+    opacity: .9;
+    }
+
+    .chat-body {
+    background: #f5f7fb;
+    height: 600px;
+    overflow-y: auto;
+    padding: 30px;
+    }
+
+    .message-row {
+    display: flex;
+    margin-bottom: 18px;
+    }
+
+    .message-left {
+    justify-content: flex-start;
+    }
+
+    .message-right {
+    justify-content: flex-end;
+    }
+
+    .message-bubble {
+    max-width: 70%;
+    padding: 15px 18px;
+    border-radius: 22px;
+    animation: fadeUp .35s ease;
+    word-break: break-word;
+    }
+
+    .left-bubble {
+    background: #fff;
+    border-bottom-left-radius: 6px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    }
+
+    .right-bubble {
+    background: linear-gradient(135deg,#A8D1A3,#6E9E6A);
+    color: #fff;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 8px 20px rgba(79,70,229,.3);
+    }
+
+    .sender {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    }
+
+    .message-time {
+    font-size: 11px;
+    opacity: .75;
+    margin-top: 8px;
+    text-align: right;
+    }
+
+    .empty-chat {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #94a3b8;
+    }
+
+    .empty-chat i {
+    font-size: 70px;
+    margin-bottom: 20px;
+    }
+
+    .chat-footer {
+    background: #fff;
+    border-top: 1px solid #eef2f7;
+    padding: 20px;
+    }
+
+    .chat-input {
+    border: none;
+    background: #f3f6fb;
+    border-radius: 30px;
+    padding: 15px 22px;
+    font-size: 15px;
+    }
+
+    .chat-input:focus {
+    background: #eef2ff;
+    box-shadow: none;
+    }
+
+    .send-btn {
+    width: 55px;
+    height: 55px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#A8D1A3,#7c3aed);
+    color: #fff;
+    transition: .3s;
+    }
+
+    .send-btn:hover {
+    transform: scale(1.08);
+    }
+
+    .action-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: #eef2ff;
+    color: #A8D1A3;
+    transition: .3s;
+    }
+
+    .action-btn:hover {
+    background: #A8D1A3;
+    color: #fff;
+    }
+
+    @@keyframes fadeUp {
+
+    from {
+    opacity: 0;
+    transform: translateY(15px);
+    }
+
+    to {
+    opacity: 1;
+    transform: translateY(0);
+    }
+    }
+
+    @@media(max-width:768px) {
+
+    .chat-wrapper {
+    margin: 15px;
+    }
+
+    .chat-body {
+    height: 450px;
+    padding: 20px;
+    }
+
+    .message-bubble {
+    max-width: 90%;
+    }
+
+    .chat-header {
+    padding: 18px;
+    }
+
+    .user-avatar {
+    width: 50px;
+    height: 50px;
+    }
+    }
+
+    .shared-post-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 15px;
+    border: 1px solid #e8e8e8;
+    margin-top: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    overflow: hidden;
+    }
+
+    .shared-post-header {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    margin-bottom: 10px;
+    }
+
+    .shared-post-card img {
+    border-radius: 12px;
+    }
+
+    .shared-post-card video {
+    border-radius: 12px;
+    }
+</style>
+<div class="chat-wrapper">
+
+    <div class="chat-card">
+
+        <!-- ========================= -->
+        <!-- HEADER -->
+        <!-- ========================= -->
+
+        <div class="chat-header">
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+
+                    <img src="@(string.IsNullOrWhiteSpace(otherUser?.ProfilePicture)
+                                                 ? "/images/default-user.png"
+                                                 : otherUser.ProfilePicture)" />
+
+                </div>
+
+                <div>
+
+                    <h4>@otherUser?.FullName</h4>
+
+                    <small>
+
+                        @if (otherUser != null && otherUser.IsOnline)
+                        {
+                            
+                            <span>Online</span>
+                        }
+                        else
+                        {
+                            <span style="color:#f1f5f9;">
+                                Last seen:
+                                @(otherUser?.LastSeen?.ToString("dd MMM hh:mm tt") ?? "Offline")
+                            </span>
+                        }
+
+                    </small>
+
+                </div>
+
+            </div>
+
+         
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- CHAT BODY -->
+        <!-- ========================= -->
+
+        <div class="chat-body" id="chatBody">
+
+            @if (!Model.Any())
+            {
+                <div class="empty-chat">
+
+                    <i class="fa-regular fa-comments"></i>
+
+                    <h3>No Messages Yet</h3>
+
+                    <p>
+                        Start the conversation by sending the first message.
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                foreach (var msg in Model)
+                {
+                    bool isMe =
+                        msg.SenderId ==
+                        User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                    <div class="message-row @(isMe ? "message-right" : "message-left")">
+
+                        <div class="message-bubble @(isMe ? "right-bubble" : "left-bubble")">
+
+                            @if (!isMe)
+                            {
+                                <div class="sender">
+
+                                    @msg.Sender?.FullName
+
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(msg.FilePath))
+                            {
+                                var ext = System.IO.Path.GetExtension(msg.FilePath).ToLower();
+
+                                if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" ||
+                                    ext == ".gif" || ext == ".webp")
+                                {
+                                    <div class="message-image">
+
+                                        <img src="@msg.FilePath"
+                                             class="img-fluid rounded"
+                                             style="max-width:250px;" />
+
+                                    </div>
+                                }
+                                else if (ext == ".mp4" || ext == ".webm" || ext == ".mov")
+                                {
+                                    <video controls
+                                           style="max-width:300px;border-radius:10px;">
+
+                                        <source src="@msg.FilePath">
+
+                                    </video>
+                                }
+                                else if (ext == ".mp3" || ext == ".wav" || ext == ".ogg")
+                                {
+                                    <audio controls>
+
+                                        <source src="@msg.FilePath">
+
+                                    </audio>
+                                }
+                                else
+                                {
+                                    <a href="@msg.FilePath"
+                                       target="_blank"
+                                       class="btn btn-light">
+
+                                        <i class="fa-solid fa-file"></i>
+
+                                        Download File
+
+                                    </a>
+                                }
+                            }
+                            @if (msg.SharedPost != null)
+                            {
+                                <div class="shared-post-card mt-2">
+
+                                    <div class="shared-post-header">
+
+                                        <i class="fa-solid fa-share-nodes text-success"></i>
+
+                                        <span class="ms-2 fw-bold">
+                                            Shared Post
+                                        </span>
+
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(msg.SharedPost.FilePath))
+                                    {
+                                        var ext = System.IO.Path.GetExtension(msg.SharedPost.FilePath).ToLower();
+
+                                        if (ext == ".jpg" ||
+                                            ext == ".jpeg" ||
+                                            ext == ".png" ||
+                                            ext == ".gif" ||
+                                            ext == ".webp")
+                                        {
+                                            <img src="@msg.SharedPost.FilePath"
+                                                 class="img-fluid rounded mt-2"
+                                                 style="max-height:260px;width:100%;object-fit:cover;" />
+                                        }
+                                        else if (ext == ".mp4" ||
+                                                 ext == ".webm" ||
+                                                 ext == ".mov")
+                                        {
+                                            <video controls
+                                                   class="w-100 rounded mt-2"
+                                                   style="max-height:260px;">
+                                                <source src="@msg.SharedPost.FilePath" />
+                                            </video>
+                                        }
+                                        else
+                                        {
+                                            <a href="@msg.SharedPost.FilePath"
+                                               target="_blank"
+                                               class="btn btn-light mt-2">
+
+                                                <i class="fa-solid fa-file"></i>
+
+                                                @msg.SharedPost.FileName
+
+                                            </a>
+                                        }
+                                    }
+
+                                    <div class="mt-3">
+
+                                        <strong>
+
+                                            @msg.SharedPost.Users?.FullName
+
+                                        </strong>
+
+                                    </div>
+
+                                    <div class="mt-1">
+
+                                        @msg.SharedPost.Caption
+
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mt-3">
+
+                                        <small>
+
+                                            ❤️ @msg.SharedPost.Likes.Count Likes
+
+                                        </small>
+
+                                        <small>
+
+                                            💬 @msg.SharedPost.Comments.Count Comments
+
+                                        </small>
+
+                                    </div>
+
+                                    <div class="mt-3">
+
+                                        <a asp-controller="Post"
+                                           asp-action="Feed"
+                                           class="btn btn-success btn-sm">
+
+                                            <i class="fa-solid fa-up-right-from-square"></i>
+
+                                            Open Post
+
+                                        </a>
+
+                                    </div>
+
+                                </div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(msg.Text))
+                            {
+                                <div class="message-text mt-2">
+
+                                    @msg.Text
+
+                                </div>
+                            }
+
+                            <div class="message-time">
+
+                                @msg.SentAt.ToString("dd MMM yyyy • hh:mm tt")
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            }
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- FOOTER -->
+        <!-- ========================= -->
+
+        <div class="chat-footer">
+
+            <form id="chatForm"
+                  asp-action="Send"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       id="conversationId"
+                       name="conversationId"
+                       value="@ViewBag.ConversationId" />
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <button type="button"
+                            id="attachBtn"
+                            class="action-btn">
+
+                        <i class="fa-solid fa-paperclip"></i>
+
+                    </button>
+
+                    <input type="file"
+                           id="fileInput"
+                           name="file"
+                           hidden />
+
+                    <input type="text"
+                           id="messageInput"
+                           name="text"
+                           class="form-control chat-input"
+                           placeholder="Type your message..."
+                           autocomplete="off"
+                           maxlength="1000"
+                           required />
+                    <div id="selectedFilePreview"
+                         style="display:none;"
+                         class="mt-2">
+
+                        <div class="alert alert-light border d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <i class="fa-solid fa-file"></i>
+
+                                <span id="selectedFileName"></span>
+
+                            </div>
+
+                            <button type="button"
+                                    id="removeFile"
+                                    class="btn btn-sm btn-danger">
+
+                                <i class="fa-solid fa-xmark"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit"
+                            id="sendBtn"
+                            class="send-btn">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+    // ==========================================
+    // VARIABLES
+    // ==========================================
+
+    const currentUserId =
+    "@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value";
+
+    const conversationId =
+    document.getElementById("conversationId").value;
+
+    const chatBody =
+    document.getElementById("chatBody");
+
+    // ==========================================
+    // SIGNALR CONNECTION
+    // ==========================================
+
+    const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chatHub")
+    .withAutomaticReconnect()
+    .build();
+
+    // ==========================================
+    // START CONNECTION
+    // ==========================================
+
+    async function startConnection() {
+
+    try {
+
+    await connection.start();
+
+    console.log("✅ SignalR Connected");
+
+    await connection.invoke(
+    "JoinConversation",
+    conversationId
+    );
+
+    }
+    catch (err) {
+
+    console.log(err);
+
+    setTimeout(startConnection, 3000);
+
+    }
+
+    }
+
+    startConnection();
+
+    // ==========================================
+    // RECEIVE MESSAGE
+    // ==========================================
+
+    connection.on("ReceiveMessage", function (
+    senderId,
+    senderName,
+    text,
+    fileName,
+    filePath,
+    fileType,
+    fileSize,
+    time) {
+
+    const empty = document.querySelector(".empty-chat");
+
+    if (empty)
+    empty.remove();
+
+    const isMe = senderId === currentUserId;
+
+    let attachment = "";
+
+    if (filePath) {
+
+    if (fileType.startsWith("image/")) {
+
+    attachment = `
+    <div class="mb-2">
+    <img src="${filePath}"
+    class="img-fluid rounded"
+    style="max-width:250px;">
+    </div>`;
+    }
+
+    else if (fileType.startsWith("video/")) {
+
+    attachment = `
+    <video controls
+    style="max-width:300px;border-radius:10px;">
+    <source src="${filePath}">
+    </video>`;
+    }
+
+    else if (fileType.startsWith("audio/")) {
+
+    attachment = `
+    <audio controls>
+    <source src="${filePath}">
+    </audio>`;
+    }
+
+    else {
+
+    attachment = `
+    <a href="${filePath}"
+    target="_blank"
+    class="btn btn-light">
+
+    <i class="fa-solid fa-file"></i>
+
+    ${fileName}
+
+    </a>`;
+    }
+
+    }
+
+    const html = `
+
+    <div class="message-row ${isMe ? "message-right" : "message-left"}">
+
+    <div class="message-bubble ${isMe ? "right-bubble" : "left-bubble"}">
+
+    ${!isMe
+    ? `<div class="sender">${senderName}</div>`
+    : ""}
+
+    ${attachment}
+
+    ${text
+    ? `<div class="message-text mt-2">${text}</div>`
+    : ""}
+
+    <div class="message-time">
+
+    ${time}
+
+    </div>
+
+    </div>
+
+    </div>`;
+
+    chatBody.insertAdjacentHTML("beforeend", html);
+
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    });
+    connection.on("ReceiveSharedPost", function (
+
+    senderId,
+    senderName,
+
+    postId,
+    caption,
+
+    filePath,
+    fileType,
+
+    author,
+
+    time
+    ) {
+
+    const empty = document.querySelector(".empty-chat");
+
+    if (empty)
+    empty.remove();
+
+    const isMe = senderId === currentUserId;
+
+    let media = "";
+
+    if (filePath !== "") {
+
+    const ext = filePath.split('.').pop().toLowerCase();
+
+    if (["jpg","jpeg","png","gif","webp"].includes(ext)) {
+
+    media = `
+    <img src="${filePath}"
+    class="img-fluid rounded mb-2"
+    style="max-height:250px;width:100%;object-fit:cover;">
+    `;
+    }
+
+    else if (["mp4","mov","webm"].includes(ext)) {
+
+    media = `
+    <video controls
+    class="w-100 rounded mb-2">
+
+    <source src="${filePath}">
+
+    </video>
+    `;
+    }
+    }
+
+    const html = `
+
+    <div class="message-row ${isMe ? "message-right" : "message-left"}">
+
+    <div class="message-bubble ${isMe ? "right-bubble" : "left-bubble"}">
+
+    ${!isMe ? `<div class="sender">${senderName}</div>` : ""}
+
+    <div class="shared-post-card">
+
+    <div class="fw-bold mb-2">
+
+    <i class="fa-solid fa-share-nodes"></i>
+
+    Shared Post
+
+    </div>
+
+    ${media}
+
+    <div class="fw-bold">
+
+    ${author}
+
+    </div>
+
+    <div class="mt-2">
+
+    ${caption}
+
+    </div>
+
+    <div class="mt-3">
+
+    <a href="/Post/Feed"
+
+    class="btn btn-success btn-sm">
+
+    Open Post
+
+    </a>
+
+    </div>
+
+    </div>
+
+    <div class="message-time">
+
+    ${time}
+
+    </div>
+
+    </div>
+
+    </div>
+    `;
+
+    chatBody.insertAdjacentHTML("beforeend", html);
+
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    });
+
+</script>
+<script>
+
+    // ==========================================
+    // AJAX SEND MESSAGE
+    // ==========================================
+
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("messageInput");
+
+    const fileInput = document.getElementById("fileInput");
+    const attachBtn = document.getElementById("attachBtn");
+
+    const preview = document.getElementById("selectedFilePreview");
+    const fileName = document.getElementById("selectedFileName");
+    const removeFile = document.getElementById("removeFile");
+
+    // ==========================================
+    // OPEN FILE PICKER
+    // ==========================================
+
+    attachBtn.addEventListener("click", function () {
+
+    fileInput.click();
+
+    });
+
+    // ==========================================
+    // SHOW FILE NAME
+    // ==========================================
+
+    fileInput.addEventListener("change", function () {
+
+    if (fileInput.files.length === 0) {
+
+    preview.style.display = "none";
+    return;
+
+    }
+
+    fileName.textContent = fileInput.files[0].name;
+
+    preview.style.display = "block";
+
+    });
+
+    // ==========================================
+    // REMOVE FILE
+    // ==========================================
+
+    removeFile.addEventListener("click", function () {
+
+    fileInput.value = "";
+
+    preview.style.display = "none";
+
+    });
+
+    // ==========================================
+    // SEND MESSAGE
+    // ==========================================
+
+    form.addEventListener("submit", async function (e) {
+
+    e.preventDefault();
+
+    const text = input.value.trim();
+
+    if (text === "" && fileInput.files.length === 0)
+    return;
+
+    const sendBtn = form.querySelector(".send-btn");
+
+    sendBtn.disabled = true;
+
+    const formData = new FormData(form);
+
+    try {
+    console.log("Submitting...");
+    console.log(form.action);
+
+    const response = await fetch(form.action, {
+    method: "POST",
+    body: formData
+});
+
+const responseText = await response.text();
+
+console.log(responseText);
+
+const result = JSON.parse(responseText);
+
+  
+
+    console.log(result);
+
+    if(result.success){
+
+    input.value="";
+    fileInput.value="";
+    preview.style.display="none";
+    }
+    }
+
+    catch (err) {
+
+    console.log(err);
+
+    }
+    finally {
+
+    sendBtn.disabled = false;
+
+    }
+
+    });
+
+    // ==========================================
+    // ENTER KEY SEND
+    // ==========================================
+
+    input.addEventListener("keydown", function (e) {
+
+    if (e.key === "Enter" && !e.shiftKey) {
+
+    e.preventDefault();
+
+    form.requestSubmit();
+
+    }
+
+    });
+
+    // ==========================================
+    // AUTO SCROLL
+    // ==========================================
+
+    window.addEventListener("load", function () {
+
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    input.focus();
+
+    });
+
+    // ==========================================
+    // PAGE ANIMATION
+    // ==========================================
+
+    document.body.animate(
+
+    [
+    {
+    opacity: 0,
+    transform: "translateY(15px)"
+    },
+    {
+    opacity: 1,
+    transform: "translateY(0)"
+    }
+    ],
+
+    {
+    duration: 350,
+    easing: "ease-out"
+    }
+
+    );
+    
+</script>
