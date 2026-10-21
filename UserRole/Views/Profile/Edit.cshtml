@@ -1,1 +1,687 @@
+﻿@model UserRole.Models.Users
 
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+
+    :root {
+        --primary: #6E9E6A;
+    --secondary: #8b5cf6;
+    --pink: #ec4899;
+    --success: #22c55e;
+    --dark: #111827;
+    --light: #f8fafc;
+    --glass: rgba(255,255,255,.82);
+    }
+
+    body {
+    background: radial-gradient(circle at top left,#c7d2fe 0%,transparent 30%), radial-gradient(circle at bottom right,#ddd6fe 0%,transparent 30%), linear-gradient(135deg,#eef4ff,#f8fbff);
+    min-height: 100vh;
+    }
+
+    .edit-wrapper {
+    max-width: 950px;
+    margin: auto;
+    padding: 50px 20px;
+    }
+
+    .edit-card {
+    background: var(--glass);
+    backdrop-filter: blur(30px);
+    border-radius: 35px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.5);
+    box-shadow: 0 30px 70px rgba(99,102,241,.15);
+    animation: cardShow .8s ease;
+    }
+
+    @@keyframes cardShow {
+
+    from {
+    opacity: 0;
+    transform: translateY(60px);
+    }
+
+    to {
+    opacity: 1;
+    transform: none;
+    }
+    }
+
+    .edit-header {
+        background: linear-gradient(135deg,#6E9E6A,#8b5cf6,#ec4899);
+    color: white;
+    padding: 45px;
+    position: relative;
+    overflow: hidden;
+    }
+
+    .edit-header::before {
+    content: "";
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background: rgba(255,255,255,.12);
+    border-radius: 50%;
+    right: -120px;
+    top: -120px;
+    }
+
+    .edit-header h1 {
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    }
+
+    .edit-header p {
+    opacity: .92;
+    font-size: 15px;
+    margin: 0;
+    }
+
+    .edit-body {
+    padding: 45px;
+    }
+
+    .avatar-section {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    }
+
+    .avatar-frame {
+    width: 180px;
+    height: 180px;
+    margin: auto;
+    border-radius: 50%;
+    padding: 6px;
+    background: linear-gradient(135deg,#6E9E6A,#ec4899);
+    box-shadow: 0 25px 45px rgba(99,102,241,.25);
+    transition: .4s;
+    }
+
+    .avatar-frame:hover {
+    transform: scale(1.05) rotate(3deg);
+    }
+
+    .avatar-frame img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white;
+    }
+
+    .upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    margin-top: 22px;
+    border-radius: 40px;
+        background: linear-gradient(135deg,#6E9E6A,#8b5cf6);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .35s;
+    box-shadow: 0 15px 30px rgba(99,102,241,.25);
+    }
+
+    .upload-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 35px rgba(99,102,241,.35);
+    }
+
+    #ProfileImage {
+    display: none;
+    }
+
+    .form-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 25px;
+    color: #111827;
+    }
+
+    .form-floating {
+    margin-bottom: 25px;
+    }
+
+    .form-control,
+    .form-select {
+    height: 60px;
+    border-radius: 18px;
+    border: 2px solid #e5e7eb;
+    font-size: 15px;
+    transition: .35s;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+            border-color: #6E9E6A;
+    box-shadow: 0 0 0 5px rgba(99,102,241,.12);
+    }
+
+    textarea.form-control {
+    height: 170px !important;
+    resize: none;
+    padding-top: 18px;
+    }
+
+    .section-divider {
+    height: 2px;
+        background: linear-gradient(90deg,#6E9E6A,transparent);
+    margin: 35px 0;
+    border-radius: 50px;
+    }
+</style>
+
+<div class="edit-wrapper">
+
+    <div class="edit-card">
+
+        <!-- HEADER -->
+
+        <div class="edit-header">
+
+            <h1>
+
+                <i class="fa-solid fa-user-gear"></i>
+
+                Edit Your Profile
+
+            </h1>
+
+            <p>
+
+                Keep your profile updated to connect with your college community.
+
+            </p>
+
+        </div>
+
+        <!-- BODY -->
+
+        <div class="edit-body">
+
+            <form method="post"
+                  enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <!-- PROFILE PHOTO -->
+
+                <div class="avatar-section">
+
+                    <div class="avatar-frame">
+
+                        <img id="previewImage"
+                             src="@(string.IsNullOrWhiteSpace(Model.ProfilePicture)
+                                    ? "/images/default-user.png"
+                                    : Model.ProfilePicture)" />
+
+                    </div>
+
+                    <label class="upload-btn mt-4">
+
+                        <i class="fa-solid fa-camera"></i>
+
+                        Change Photo
+
+                        <input type="file"
+                               id="ProfileImage"
+                               name="ProfileImage"
+                               accept="image/*" />
+
+                    </label>
+
+                </div>
+
+                <div class="section-divider"></div>
+
+                <h4 class="form-title">
+
+                    Personal Information
+
+                </h4>
+
+                <!-- FULL NAME -->
+
+                <div class="form-floating">
+
+                    <input asp-for="FullName"
+                           class="form-control"
+                           placeholder="Full Name" />
+
+                    <label asp-for="FullName">
+
+                        <i class="fa-solid fa-user text-primary"></i>
+
+                        Full Name
+
+                    </label>
+
+                    <span asp-validation-for="FullName"
+                          class="text-danger small"></span>
+
+                </div>
+
+                <!-- ENROLLMENT -->
+                @if (!User.IsInRole("Admin"))
+                {
+                    <div class="form-floating">
+
+                        <input asp-for="EnrollmentNo"
+                               class="form-control"
+                               placeholder="Enrollment Number" />
+
+                        <label asp-for="EnrollmentNo">
+                            <i class="fa-solid fa-id-card text-primary"></i>
+                            Enrollment Number
+                        </label>
+
+                        <span asp-validation-for="EnrollmentNo"
+                              class="text-danger small"></span>
+
+                    </div>
+                }
+
+                <!-- DEPARTMENT -->
+                @if (!User.IsInRole("Admin"))
+                {
+                    <div class="form-floating">
+
+                        <select asp-for="Department"
+                                class="form-select">
+
+                            <option value="">Choose Department</option>
+
+                            <!-- Engineering -->
+                            <option>Computer Science Engineering (CSE)</option>
+                            <option>Information Technology (IT)</option>
+                            <option>Artificial Intelligence & Data Science (AI & DS)</option>
+                            <option>Artificial Intelligence & Machine Learning (AI & ML)</option>
+                            <option>Computer Engineering (CE)</option>
+                            <option>Software Engineering</option>
+                            <option>Cyber Security</option>
+                            <option>Data Science</option>
+                            <option>Electronics & Communication Engineering (ECE)</option>
+                            <option>Electrical Engineering (EE)</option>
+                            <option>Electrical & Electronics Engineering (EEE)</option>
+                            <option>Mechanical Engineering (ME)</option>
+                            <option>Civil Engineering</option>
+                            <option>Chemical Engineering</option>
+                            <option>Petroleum Engineering</option>
+                            <option>Mining Engineering</option>
+                            <option>Metallurgical Engineering</option>
+                            <option>Automobile Engineering</option>
+                            <option>Aeronautical Engineering</option>
+                            <option>Aerospace Engineering</option>
+                            <option>Marine Engineering</option>
+                            <option>Robotics Engineering</option>
+                            <option>Mechatronics Engineering</option>
+                            <option>Production Engineering</option>
+                            <option>Industrial Engineering</option>
+                            <option>Textile Engineering</option>
+                            <option>Environmental Engineering</option>
+                            <option>Agricultural Engineering</option>
+                            <option>Biomedical Engineering</option>
+                            <option>Biotechnology Engineering</option>
+
+                            <!-- Computer -->
+                            <option>BCA</option>
+                            <option>MCA</option>
+                            <option>B.Sc. Information Technology</option>
+                            <option>M.Sc. Information Technology</option>
+                            <option>B.Sc. Computer Science</option>
+                            <option>M.Sc. Computer Science</option>
+
+                            <!-- Pharmacy -->
+                            <option>D.Pharm</option>
+                            <option>B.Pharm</option>
+                            <option>M.Pharm</option>
+                            <option>Pharm.D</option>
+
+                            <!-- Medical -->
+                            <option>MBBS</option>
+                            <option>BDS (Dental)</option>
+                            <option>BAMS</option>
+                            <option>BHMS</option>
+                            <option>BPT (Physiotherapy)</option>
+                            <option>BOT (Occupational Therapy)</option>
+                            <option>B.Sc. Nursing</option>
+                            <option>GNM Nursing</option>
+                            <option>ANM Nursing</option>
+                            <option>M.Sc. Nursing</option>
+
+                            <!-- Science -->
+                            <option>B.Sc. Physics</option>
+                            <option>B.Sc. Chemistry</option>
+                            <option>B.Sc. Mathematics</option>
+                            <option>B.Sc. Biology</option>
+                            <option>B.Sc. Microbiology</option>
+                            <option>B.Sc. Biotechnology</option>
+                            <option>B.Sc. Environmental Science</option>
+                            <option>M.Sc. Physics</option>
+                            <option>M.Sc. Chemistry</option>
+                            <option>M.Sc. Mathematics</option>
+                            <option>M.Sc. Biotechnology</option>
+
+                            <!-- Commerce -->
+                            <option>B.Com</option>
+                            <option>M.Com</option>
+                            <option>BBA</option>
+                            <option>MBA</option>
+                            <option>Bachelor of Accounting & Finance (BAF)</option>
+                            <option>Bachelor of Banking & Insurance (BBI)</option>
+
+                            <!-- Arts -->
+                            <option>BA English</option>
+                            <option>BA Hindi</option>
+                            <option>BA Gujarati</option>
+                            <option>BA Economics</option>
+                            <option>BA Psychology</option>
+                            <option>BA Sociology</option>
+                            <option>BA Political Science</option>
+                            <option>BA History</option>
+                            <option>MA English</option>
+                            <option>MA Psychology</option>
+                            <option>MA Economics</option>
+
+                            <!-- Law -->
+                            <option>LLB</option>
+                            <option>BA LLB</option>
+                            <option>BBA LLB</option>
+                            <option>LLM</option>
+
+                            <!-- Education -->
+                            <option>B.Ed</option>
+                            <option>M.Ed</option>
+
+                            <!-- Agriculture -->
+                            <option>B.Sc. Agriculture</option>
+                            <option>M.Sc. Agriculture</option>
+                            <option>Horticulture</option>
+                            <option>Forestry</option>
+
+                            <!-- Design -->
+                            <option>Fashion Designing</option>
+                            <option>Interior Designing</option>
+                            <option>Graphic Designing</option>
+                            <option>Animation & Multimedia</option>
+
+                            <!-- Hotel & Tourism -->
+                            <option>Hotel Management</option>
+                            <option>Hospitality Management</option>
+                            <option>Travel & Tourism</option>
+
+                            <!-- Journalism -->
+                            <option>Journalism & Mass Communication</option>
+                            <option>Digital Media</option>
+
+                            <!-- Fine Arts -->
+                            <option>Fine Arts</option>
+                            <option>Performing Arts</option>
+                            <option>Music</option>
+                            <option>Dance</option>
+
+                            <!-- Others -->
+                            <option>Architecture (B.Arch)</option>
+                            <option>Planning</option>
+                            <option>Library Science</option>
+                            <option>Physical Education</option>
+                            <option>Social Work (BSW/MSW)</option>
+                            <option>Other</option>
+                        </select>
+
+                        <label asp-for="Department">
+                            <i class="fa-solid fa-building-columns text-primary"></i>
+                            Department
+                        </label>
+
+                        <span asp-validation-for="Department"
+                              class="text-danger small"></span>
+
+                    </div>
+                }
+
+                <!-- BIO -->
+
+                <div class="mb-4">
+
+                    <label class="fw-bold mb-2">
+
+                        <i class="fa-solid fa-pen-to-square text-primary"></i>
+
+                        About You
+
+                    </label>
+
+                    <textarea asp-for="Bio"
+                              id="bioBox"
+                              class="form-control"
+                              maxlength="500"
+                              placeholder="Tell everyone something about yourself..."></textarea>
+
+                    <div class="text-end mt-2">
+
+                        <small class="text-muted">
+
+                            <span id="bioCount">0</span>/500
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <!-- PROFILE COMPLETION -->
+
+                @{
+                    int score = 0;
+
+                    if (!string.IsNullOrWhiteSpace(Model.FullName))
+                    {
+                        score += 25;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(Model.Bio))
+                    {
+                        score += 25;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(Model.ProfilePicture))
+                    {
+                        score += 25;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(Model.Department) &&
+                        !string.IsNullOrWhiteSpace(Model.EnrollmentNo))
+                    {
+                        score += 25;
+                    }
+                }
+
+                <div class="mb-5">
+
+                    <div class="d-flex justify-content-between mb-2">
+
+                        <strong>Profile Strength</strong>
+
+                        <span class="fw-bold text-primary">
+
+                            @score%
+
+                        </span>
+
+                    </div>
+
+                    <div class="progress rounded-pill"
+                         style="height:14px;">
+
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"
+
+                             style="width:@score%">
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- ACTION BUTTONS -->
+
+                <div class="d-flex flex-wrap gap-3 justify-content-center mt-5">
+
+                    <button type="submit"
+                            class="btn btn-lg btn-primary px-5 rounded-pill shadow save-btn">
+
+                        <i class="fa-solid fa-floppy-disk me-2"></i>
+
+                        Save Changes
+
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-lg btn-outline-secondary px-5 rounded-pill">
+
+                        <i class="fa-solid fa-arrow-left me-2"></i>
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+                <!-- SECURITY -->
+
+                <div class="alert alert-light border rounded-4 mt-5">
+
+                    <div class="d-flex align-items-center">
+
+                        <i class="fa-solid fa-shield-halved text-success fa-2x me-3"></i>
+
+                        <div>
+
+                            <strong>Your profile is secure.</strong>
+
+                            <div class="small text-muted">
+
+                                Only information you choose to share is visible to other students.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+
+        const imageInput=document.getElementById("ProfileImage");
+
+        const preview=document.getElementById("previewImage");
+
+        imageInput.addEventListener("change",function(){
+
+            if(this.files && this.files[0]){
+
+                const reader=new FileReader();
+
+                reader.onload=function(e){
+
+                    preview.src=e.target.result;
+
+                }
+
+                reader.readAsDataURL(this.files[0]);
+
+            }
+
+        });
+
+
+        const bio=document.getElementById("bioBox");
+
+        const counter=document.getElementById("bioCount");
+
+        function updateCounter(){
+
+            counter.innerText=bio.value.length;
+
+        }
+
+        updateCounter();
+
+        bio.addEventListener("input",updateCounter);
+
+
+
+        document.querySelectorAll(".form-control,.form-select").forEach(function(el){
+
+            el.addEventListener("focus",function(){
+
+                this.parentElement.style.transform="translateY(-3px)";
+
+            });
+
+            el.addEventListener("blur",function(){
+
+                this.parentElement.style.transform="translateY(0px)";
+
+            });
+
+        });
+
+
+
+        const saveBtn=document.querySelector(".save-btn");
+
+        saveBtn.addEventListener("mouseenter",()=>{
+
+            saveBtn.style.transform="translateY(-4px) scale(1.03)";
+
+        });
+
+        saveBtn.addEventListener("mouseleave",()=>{
+
+            saveBtn.style.transform="translateY(0px)";
+
+        });
+
+
+
+        document.querySelector(".avatar-frame").addEventListener("mouseenter",()=>{
+
+            document.querySelector(".avatar-frame").style.boxShadow="0 35px 60px rgba(99,102,241,.35)";
+
+        });
+
+        document.querySelector(".avatar-frame").addEventListener("mouseleave",()=>{
+
+            document.querySelector(".avatar-frame").style.boxShadow="0 25px 45px rgba(99,102,241,.25)";
+
+        });
+
+    </script>
+
+}

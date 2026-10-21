@@ -1,0 +1,972 @@
+﻿@model UserRole.Models.Users
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<style>
+
+    /* ===================================================
+                        GOOGLE FONT
+    =================================================== */
+
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+    /* ===================================================
+                        ROOT
+    =================================================== */
+    :root {
+        --primary: #6E9E6A;
+        --secondary: #8b5cf6;
+        --pink: #ec4899;
+        --blue: #3b82f6;
+        --green: #10b981;
+        --orange: #f59e0b;
+        --danger: #ef4444;
+        --bg: #eef4ff;
+        --glass: rgba(255,255,255,.72);
+        --border: rgba(255,255,255,.35);
+        --shadow: 0 20px 45px rgba(99,102,241,.12);
+    }
+
+    /* ===================================================
+                        BODY
+    =================================================== */
+
+    body {
+        font-family: 'Poppins',sans-serif;
+        background: radial-gradient(circle at top left,#dbeafe 0,#eef4ff 35%,#f7f9ff 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+        /* ===================================================
+                    FLOATING BACKGROUND
+    =================================================== */
+
+        body::before {
+            content: "";
+            position: fixed;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#6E9E6A,#8b5cf6);
+            top: -180px;
+            left: -120px;
+            opacity: .18;
+            filter: blur(35px);
+            animation: floatOne 12s ease-in-out infinite;
+            z-index: -2;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#06b6d4,#3b82f6);
+            right: -180px;
+            bottom: -220px;
+            opacity: .16;
+            filter: blur(45px);
+            animation: floatTwo 14s ease-in-out infinite;
+            z-index: -2;
+        }
+
+    /* ===================================================
+                        CONTAINER
+    =================================================== */
+
+    .profile-page {
+        max-width: 1300px;
+        margin: auto;
+        padding: 45px 20px 80px;
+    }
+
+    /* ===================================================
+                        COVER
+    =================================================== */
+
+    .cover-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 35px;
+        min-height: 330px;
+        background: linear-gradient( 135deg, #A8D1A3,#6E9E6A, #8b5cf6, #ec4899 );
+        background-size: 300% 300%;
+        animation: gradientMove 12s linear infinite;
+        box-shadow: 0 25px 70px rgba(79,70,229,.25);
+    }
+
+        .cover-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 15% 25%, rgba(255,255,255,.18), transparent 35%), radial-gradient(circle at 90% 20%, rgba(255,255,255,.12), transparent 35%), radial-gradient(circle at 60% 90%, rgba(255,255,255,.12), transparent 35%);
+        }
+
+        .cover-card::after {
+            content: "";
+            position: absolute;
+            width: 900px;
+            height: 900px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.08);
+            top: -600px;
+            right: -200px;
+            transform: rotate(15deg);
+        }
+
+    /* ===================================================
+                    FLOATING SHAPES
+    =================================================== */
+
+    .floating-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,255,255,.18);
+        animation: floatSlow 8s ease-in-out infinite;
+    }
+
+    .circle1 {
+        width: 80px;
+        height: 80px;
+        left: 10%;
+        top: 40%;
+    }
+
+    .circle2 {
+        width: 45px;
+        height: 45px;
+        right: 18%;
+        top: 28%;
+    }
+
+    .circle3 {
+        width: 120px;
+        height: 120px;
+        right: 8%;
+        bottom: 10%;
+    }
+
+    /* ===================================================
+                    GLASS CARD
+    =================================================== */
+
+    .glass-profile {
+        position: relative;
+        margin-top: -95px;
+        background: var(--glass);
+        backdrop-filter: blur(30px);
+        border: 1px solid var(--border);
+        border-radius: 30px;
+        box-shadow: var(--shadow);
+        padding: 35px;
+        transition: .45s;
+    }
+
+        .glass-profile:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 35px 80px rgba(79,70,229,.18);
+        }
+
+    /* ===================================================
+                    PROFILE IMAGE
+    =================================================== */
+
+    .profile-image {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 8px solid white;
+        box-shadow: 0 20px 45px rgba(0,0,0,.18), 0 0 45px rgba(99,102,241,.25);
+        transition: .45s;
+    }
+
+        .profile-image:hover {
+            transform: scale(1.06) rotate(2deg);
+        }
+
+
+   
+
+    /* ===================================================
+                    VERIFIED
+    =================================================== */
+
+    .verify-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 18px;
+        border-radius: 30px;
+        background: rgba(99,102,241,.1);
+        color: #A8D1A3;
+        font-weight: 700;
+        margin-top: 12px;
+    }
+
+    /* ===================================================
+                    NAME
+    =================================================== */
+
+    .profile-name {
+        font-size: 42px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 10px;
+    }
+
+    .profile-email {
+        color: #64748b;
+        font-size: 16px;
+    }
+
+    /* ===================================================
+                    ANIMATIONS
+    =================================================== */
+
+    @@keyframes gradientMove {
+
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @@keyframes floatSlow {
+
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-18px);
+        }
+    }
+
+    @@keyframes floatOne {
+
+        0%, 100% {
+            transform: translate(0,0);
+        }
+
+        50% {
+            transform: translate(40px,30px);
+        }
+    }
+
+    @@keyframes floatTwo {
+
+        0%, 100% {
+            transform: translate(0,0);
+        }
+
+        50% {
+            transform: translate(-50px,-40px);
+        }
+    }
+
+</style>
+<div class="profile-page">
+
+    <!-- ========================================= -->
+    <!-- COVER SECTION -->
+    <!-- ========================================= -->
+
+    <div class="cover-card">
+
+        <div class="floating-circle circle1"></div>
+        <div class="floating-circle circle2"></div>
+        <div class="floating-circle circle3"></div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- PROFILE CARD -->
+    <!-- ========================================= -->
+
+    <div class="glass-profile">
+
+        <div class="row align-items-center">
+
+            <!-- PROFILE IMAGE -->
+
+            <div class="col-lg-4 text-center mb-4 mb-lg-0">
+
+                <div class="position-relative d-inline-block">
+
+                    <img src="@(string.IsNullOrWhiteSpace(Model.ProfilePicture)
+                                          ? "/images/default-user.png"
+                                          : Model.ProfilePicture)"
+                         class="profile-image" />
+
+                   
+
+                </div>
+            </div>
+
+            <!-- PROFILE DETAILS -->
+
+            <div class="col-lg-8">
+
+                <h1 class="profile-name">
+
+                    @Model.FullName
+
+                </h1>
+
+                <div class="profile-email mb-3">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    @Model.Email
+
+                </div>
+                <div class="profile-status mb-3">
+
+                    @if (Model.IsOnline)
+                    {
+                        <span class="badge bg-success">
+                            <i class="fa-solid fa-circle" style="font-size:8px"></i>
+                            Online
+                        </span>
+                    }
+                    else if (Model.LastSeen != null)
+                    {
+                        <small class="text-muted">
+                            Last seen @Model.LastSeen.Value.ToString("dd MMM yyyy • hh:mm tt")
+                        </small>
+                    }
+                    else
+                    {
+                        <small class="text-muted">
+                            Offline
+                        </small>
+                    }
+
+                </div>
+
+                <div class="verify-badge">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    Verified Campus Member
+
+                </div>
+
+                <hr class="my-4">
+
+                <!-- BASIC INFO -->
+                @if (!User.IsInRole("Admin"))
+                {
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <div class="info-card">
+
+                                <div class="info-icon">
+                                    <i class="fa-solid fa-id-card"></i>
+                                </div>
+
+                                <div>
+
+                                    <small class="text-muted">
+                                        Enrollment Number
+                                    </small>
+
+                                    <h5 class="mb-0">
+                                        @(string.IsNullOrWhiteSpace(Model.EnrollmentNo)
+                                            ? "Not Available"
+                                            : Model.EnrollmentNo)
+                                    </h5>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="info-card">
+
+                                <div class="info-icon">
+                                    <i class="fa-solid fa-building-columns"></i>
+                                </div>
+
+                                <div>
+
+                                    <small class="text-muted">
+                                        Department
+                                    </small>
+
+                                    <h5 class="mb-0">
+                                        @(string.IsNullOrWhiteSpace(Model.Department)
+                                            ? "Not Available"
+                                            : Model.Department)
+                                    </h5>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+                <!-- BIO -->
+
+                <div class="bio-card mt-4">
+
+                    <h5>
+
+                        <i class="fa-solid fa-user"></i>
+
+                        About Me
+
+                    </h5>
+
+                    <p class="mb-0">
+
+                        @(string.IsNullOrWhiteSpace(Model.Bio)
+                            ? "Welcome to CampusPulse+ Update your profile and tell everyone about yourself."
+                            : Model.Bio)
+
+                    </p>
+
+                </div>
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="mt-4 d-flex flex-wrap gap-3">
+
+                    <a asp-action="Edit"
+                       class="btn btn-primary rounded-pill px-4 py-3">
+
+                        <i class="fa-solid fa-pen"></i>
+
+                        Edit Profile
+
+                    </a>
+
+                    <a asp-action="Search"
+                       class="btn btn-dark rounded-pill px-4 py-3">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        Find Students
+
+                    </a>
+
+                    <a asp-controller="Message"
+                       asp-action="Inbox"
+                       class="btn btn-success rounded-pill px-4 py-3">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                        Messages
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- LIVE STATS -->
+    <!-- ========================================= -->
+
+    <div class="row mt-5 g-4">
+
+        <div class="col-lg-4">
+
+            <div class="stats-box">
+
+                <div class="stats-icon bg-primary">
+
+                    <i class="fa-solid fa-images"></i>
+
+                </div>
+
+                <h2 class="counter">
+
+                    @ViewBag.Posts
+
+                </h2>
+
+                <span>Total Posts</span>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="stats-box">
+
+                <div class="stats-icon bg-success">
+
+                    <i class="fa-solid fa-users"></i>
+
+                </div>
+
+                <h2 class="counter">
+
+                    @ViewBag.Followers
+
+                </h2>
+
+                <span>Followers</span>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="stats-box">
+
+                <div class="stats-icon bg-danger">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                </div>
+
+                <h2 class="counter">
+
+                    @ViewBag.Following
+
+                </h2>
+
+                <span>Following</span>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- ========================================= -->
+    <!-- PROFILE COMPLETION -->
+    <!-- ========================================= -->
+    @{
+        int profileScore = 0;
+
+        // Common fields
+        if (!string.IsNullOrWhiteSpace(Model.FullName))
+            profileScore += 20;
+
+        if (!string.IsNullOrWhiteSpace(Model.ProfilePicture))
+            profileScore += 20;
+
+        if (!string.IsNullOrWhiteSpace(Model.Bio))
+            profileScore += 20;
+
+        if (User.IsInRole("Admin"))
+        {
+            // Admin doesn't have Department & Enrollment
+            // So make profile complete once common fields are filled.
+
+            if (profileScore == 60)
+            {
+                profileScore = 100;
+            }
+        }
+        else
+        {
+            // Student only
+
+            if (!string.IsNullOrWhiteSpace(Model.Department))
+                profileScore += 20;
+
+            if (!string.IsNullOrWhiteSpace(Model.EnrollmentNo))
+                profileScore += 20;
+        }
+    }
+
+    <div class="row mt-5">
+
+        <div class="col-lg-8 mb-4">
+
+            <div class="glass-card p-4 h-100">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <div>
+
+                        <h3 class="fw-bold mb-1">
+
+                            <i class="fa-solid fa-chart-line text-primary"></i>
+
+                            Profile Completion
+
+                        </h3>
+
+                        <p class="text-muted mb-0">
+
+                            Complete your profile to unlock all campus features.
+
+                        </p>
+
+                    </div>
+
+                    <h2 class="text-primary fw-bold">
+
+                        @profileScore%
+
+                    </h2>
+
+                </div>
+
+                <div class="progress modern-progress">
+
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                         role="progressbar"
+                         style="width:@profileScore%">
+                    </div>
+
+                </div>
+
+                <div class="row mt-4">
+
+                    <div class="col-md-6">
+
+                        <div class="check-item">
+
+                            <i class="fa-solid @(string.IsNullOrWhiteSpace(Model.ProfilePicture)
+                                                           ? "fa-circle-xmark text-danger"
+                                                           : "fa-circle-check text-success")"></i>
+
+                            Profile Picture
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="check-item">
+
+                            <i class="fa-solid @(string.IsNullOrWhiteSpace(Model.Bio)
+                                                           ? "fa-circle-xmark text-danger"
+                                                           : "fa-circle-check text-success")"></i>
+
+                            Bio
+
+                        </div>
+
+                    </div>
+
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        <div class="col-md-6 mt-3">
+
+                            <div class="check-item">
+
+                                <i class="fa-solid @(string.IsNullOrWhiteSpace(Model.Department)
+                                                   ? "fa-circle-xmark text-danger"
+                                                   : "fa-circle-check text-success")"></i>
+
+                                Department
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+
+                            <div class="check-item">
+
+                                <i class="fa-solid @(string.IsNullOrWhiteSpace(Model.EnrollmentNo)
+                                                   ? "fa-circle-xmark text-danger"
+                                                   : "fa-circle-check text-success")"></i>
+
+                                Enrollment Number
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>   <!-- row -->
+
+            </div>       <!-- glass-card -->
+
+        </div>           <!-- col-lg-8 -->
+        <!-- ========================================= -->
+        <!-- ACHIEVEMENTS -->
+        <!-- ========================================= -->
+
+        <div class="col-lg-4 mb-4">
+
+            <div class="glass-card p-4 h-100">
+
+                <h3 class="fw-bold mb-4">
+
+                    <i class="fa-solid fa-trophy text-warning"></i>
+
+                    Achievements
+
+                </h3>
+
+                <div class="achievement-item">
+
+                    <div class="achievement-icon bg-warning">
+
+                        <i class="fa-solid fa-star"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h6 class="mb-1">
+
+                            Campus Member
+
+                        </h6>
+
+                        <small class="text-muted">
+
+                            Successfully joined CampusPulse+.
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="achievement-item mt-4">
+
+                    <div class="achievement-icon bg-success">
+
+                        <i class="fa-solid fa-user-group"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h6 class="mb-1">
+
+                            Community Builder
+
+                        </h6>
+
+                        <small class="text-muted">
+
+                            Growing your campus network.
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="achievement-item mt-4">
+
+                    <div class="achievement-icon bg-primary">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h6 class="mb-1">
+
+                            Active Contributor
+
+                        </h6>
+
+                        <small class="text-muted">
+
+                            Share posts and engage with students.
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded",()=>{
+
+        /* Fade Animation */
+
+        const observer = new IntersectionObserver((entries)=>{
+
+            entries.forEach(entry=>{
+
+                if(entry.isIntersecting){
+
+                    entry.target.classList.add("show-animation");
+
+                }
+
+            });
+
+        },{
+
+            threshold:.15
+
+        });
+
+        document.querySelectorAll(".glass-card,.stats-box,.info-card,.completion-card,.profile-posts")
+        .forEach(el=>observer.observe(el));
+
+
+
+        /* Counter Animation */
+
+        document.querySelectorAll(".counter").forEach(counter=>{
+
+            const target=parseInt(counter.innerText);
+
+            let count=0;
+
+            const speed=20;
+
+            const update=()=>{
+
+                count+=Math.ceil(target/35);
+
+                if(count>=target){
+
+                    counter.innerText=target;
+
+                }else{
+
+                    counter.innerText=count;
+
+                    requestAnimationFrame(update);
+
+                }
+
+            }
+
+            update();
+
+        });
+
+
+
+        /* Floating Avatar */
+
+        const avatar=document.querySelector(".profile-image");
+
+        if(avatar){
+
+            avatar.addEventListener("mousemove",()=>{
+
+                avatar.style.transform="scale(1.05) rotate(3deg)";
+
+            });
+
+            avatar.addEventListener("mouseleave",()=>{
+
+                avatar.style.transform="";
+
+            });
+
+        }
+
+
+
+        /* Smooth Buttons */
+
+        document.querySelectorAll(".action-btn").forEach(btn=>{
+
+            btn.addEventListener("mouseenter",()=>{
+
+                btn.style.transform="translateY(-4px)";
+
+            });
+
+            btn.addEventListener("mouseleave",()=>{
+
+                btn.style.transform="translateY(0px)";
+
+            });
+
+        });
+
+    });
+
+</script>
+
+<style>
+
+    .show-animation {
+        animation: fadeUp .8s ease forwards;
+    }
+
+    @@keyframes fadeUp {
+
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .profile-posts {
+        opacity: 0;
+    }
+
+    .glass-card,
+    .info-card,
+    .completion-card,
+    .stats-box {
+        opacity: 0;
+    }
+
+    .empty-post-card {
+        background: white;
+        border-radius: 30px;
+        padding: 70px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0,0,0,.08);
+    }
+
+        .empty-post-card i {
+            font-size: 70px;
+            color: #6E9E6A;
+            margin-bottom: 25px;
+        }
+
+        .empty-post-card h4 {
+            font-weight: 700;
+        }
+
+</style>
+<partial name="_Footer" />
