@@ -1,1 +1,1400 @@
+﻿@model List<UserRole.Models.Post>
+@using UserRole.Models
 
+@{
+    ViewData["Title"] = "Campus Feed";
+
+    var currentUser = ViewBag.CurrentUser as Users;
+
+    var totalPosts = Model?.Count ?? 0;
+    var totalLikes = Model?.Sum(x => x.Likes?.Count ?? 0) ?? 0;
+    var totalComments = Model?.Sum(x => x.Comments?.Count ?? 0) ?? 0;
+
+    string greeting;
+
+    var hour = DateTime.Now.Hour;
+
+    if (hour < 12)
+    {
+        greeting = "Good Morning";
+    }
+    else if (hour < 17)
+    {
+        greeting = "Good Afternoon";
+    }
+    else if (hour < 21)
+    {
+        greeting = "Good Evening";
+    }
+    else
+    {
+        greeting = "Good Night";
+    }
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+<!-- ========================================= -->
+<!-- FLOATING BACKGROUND -->
+<!-- ========================================= -->
+
+<div class="bg-circle circle1"></div>
+<div class="bg-circle circle2"></div>
+<div class="bg-circle circle3"></div>
+
+<!-- ========================================= -->
+<!-- FEED -->
+<!-- ========================================= -->
+
+<div class="feed-wrapper">
+
+    <!-- HEADER -->
+
+    <div class="feed-hero">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="profile-wrapper">
+
+                        <img src="@(string.IsNullOrWhiteSpace(currentUser?.ProfilePicture)
+                                                                     ? "/images/default-user.png"
+                                                                     : currentUser.ProfilePicture)"
+                             class="hero-profile" />
+
+                        
+
+                    </div>
+
+                    <div class="ms-4">
+
+                        <span class="hero-greeting">
+
+                            👋 @greeting
+
+                        </span>
+
+                        <h2 class="hero-title">
+
+                            @(currentUser?.FullName ?? "Campus User")
+
+                        </h2>
+
+                        <p class="hero-subtitle">
+
+                            Welcome back to
+                            <strong>CampusPulse+</strong>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-search"></i>
+
+                    <input type="text"
+                           id="searchPosts"
+                           placeholder="Search posts..." />
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- QUICK STATS -->
+    <!-- ========================================= -->
+
+    <div class="row g-4 mt-1 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="glass-stat">
+
+                <div class="stat-icon blue">
+
+                    <i class="fa-solid fa-images"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>@totalPosts</h2>
+
+                    <p>Total Posts</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="glass-stat">
+
+                <div class="stat-icon red">
+
+                    <i class="fa-solid fa-heart"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>@totalLikes</h2>
+
+                    <p>Total Likes</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="glass-stat">
+
+                <div class="stat-icon green">
+
+                    <i class="fa-solid fa-comments"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>@totalComments</h2>
+
+                    <p>Total Comments</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- TRENDING BAR -->
+    <!-- ========================================= -->
+
+    <div class="feed-toolbar">
+
+        <div>
+
+            <span class="badge-feed">
+
+                🔥 Trending Feed
+
+            </span>
+
+        </div>
+
+        <div>
+
+            <span class="live-dot"></span>
+
+            Live Campus Activity
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- POSTS START -->
+    <!-- ========================================= -->
+
+    <div id="postsContainer">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="empty-feed">
+
+                <div class="empty-animation">
+
+                    <i class="fa-solid fa-camera-retro"></i>
+
+                </div>
+
+                <h2>No Posts Available</h2>
+
+                <p>
+                    Looks like your campus feed is empty.<br />
+                    New posts from administrators will appear here.
+                </p>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Post"
+                       asp-action="Create"
+                       class="btn btn-lg btn-primary rounded-pill px-5 mt-3">
+
+                        <i class="fa-solid fa-plus"></i>
+                        Create First Post
+
+                    </a>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="row">
+
+                <!-- POSTS -->
+
+                <div class="col-lg-8">
+
+                    @foreach (var post in Model.OrderByDescending(x => x.CreatedAt))
+                    {
+                        <div class="feed-post search-item">
+
+                            <partial name="_PostCard" model="post" />
+
+                        </div>
+                    }
+                    <div id="noSearchResults" class="empty-feed" style="display:none;">
+
+                        <div class="empty-animation">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                        </div>
+
+                        <h2>No Matching Posts Found</h2>
+
+                        <p>
+                            We couldn't find any posts matching your search.<br />
+                            Try a different keyword or clear the search to see all posts.
+                        </p>
+
+                        <button type="button"
+                                class="btn btn-lg btn-primary rounded-pill px-5 mt-3"
+                                onclick="clearPostSearch()">
+
+                            <i class="fa-solid fa-rotate-left"></i>
+
+                            Clear Search
+
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDEBAR -->
+
+                <div class="col-lg-4">
+
+                    <!-- USER CARD -->
+
+                    <div class="glass-widget">
+
+                        <div class="text-center">
+
+                            <img src="@(string.IsNullOrWhiteSpace(currentUser?.ProfilePicture)
+                                                                             ? "/images/default-user.png"
+                                                                             : currentUser.ProfilePicture)"
+                                 class="widget-profile" />
+
+                            <h4 class="mt-3">
+
+                                @(currentUser?.FullName ?? "Campus User")
+
+                            </h4>
+
+                            <p class="text-muted">
+
+                                @currentUser?.Department
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- QUICK LINKS -->
+
+                    <div class="glass-widget mt-4">
+
+                        <h5>
+
+                            <i class="fa-solid fa-bolt text-warning"></i>
+
+                            Quick Access
+
+                        </h5>
+
+                        <a asp-controller="Profile"
+                           asp-action="Index"
+                           class="quick-link">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            My Profile
+
+                        </a>
+
+                        <a asp-controller="Message"
+                           asp-action="Inbox"
+                           class="quick-link">
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                            Messages
+
+                        </a>
+
+                        <a asp-controller="Notification"
+                           asp-action="Index"
+                           class="quick-link">
+
+                            <i class="fa-solid fa-bell"></i>
+
+                            Notifications
+
+                        </a>
+
+                        <a asp-controller="Profile"
+                           asp-action="Search"
+                           class="quick-link">
+
+                            <i class="fa-solid fa-users"></i>
+
+                            Find Students
+
+                        </a>
+
+                    </div>
+
+                    <!-- CAMPUS STATUS -->
+
+                    <div class="glass-widget mt-4">
+
+                        <h5>
+
+                            <i class="fa-solid fa-chart-simple text-success"></i>
+
+                            Campus Status
+
+                        </h5>
+
+                        <div class="status-item">
+
+                            <span>Posts</span>
+
+                            <strong>@totalPosts</strong>
+
+                        </div>
+
+                        <div class="status-item">
+
+                            <span>Likes</span>
+
+                            <strong>@totalLikes</strong>
+
+                        </div>
+
+                        <div class="status-item">
+
+                            <span>Comments</span>
+
+                            <strong>@totalComments</strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+<!-- FLOATING BUTTON -->
+
+<button id="topBtn">
+
+    <i class="fa-solid fa-arrow-up"></i>
+
+</button>
+
+<!-- LOADER -->
+
+<div id="pageLoader">
+
+    <div class="loader-circle"></div>
+
+</div>
+<style>
+
+    /* ===================================================
+    CampusPulse+ PRO FEED UI
+    PART 3A
+    ===================================================*/
+
+    :root {
+    --primary: #6E9E6A;
+    --secondary: #8b5cf6;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --glass: rgba(255,255,255,.72);
+    }
+
+    /* ======================================
+    BODY
+    ======================================*/
+
+    body {
+    background: linear-gradient(135deg,#eef2ff,#f8fafc,#ecfeff);
+    background-size: 300% 300%;
+    animation: bgMove 18s ease infinite;
+    overflow-x: hidden;
+    min-height: 100vh;
+    }
+
+    .feed-wrapper {
+    max-width: 1350px;
+    margin: auto;
+    padding: 35px 20px 80px;
+    position: relative;
+    z-index: 5;
+    }
+
+    /* ======================================
+    FLOATING BACKGROUND
+    ======================================*/
+
+    .bg-circle {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .28;
+    animation: floatBlob 16s ease-in-out infinite;
+    z-index: -1;
+    }
+
+    .circle1 {
+    width: 420px;
+    height: 420px;
+    background: #6E9E6A;
+    top: -120px;
+    left: -120px;
+    }
+
+    .circle2 {
+    width: 350px;
+    height: 350px;
+    background: #22c55e;
+    right: -100px;
+    top: 220px;
+    animation-delay: 3s;
+    }
+
+    .circle3 {
+    width: 420px;
+    height: 420px;
+    background: #ec4899;
+    bottom: -120px;
+    left: 35%;
+    animation-delay: 7s;
+    }
+
+    /* ======================================
+    HERO
+    ======================================*/
+
+    .feed-hero {
+    background: rgba(255,255,255,.78);
+    backdrop-filter: blur(22px);
+    border-radius: 30px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 25px 60px rgba(99,102,241,.12);
+    border: 1px solid rgba(255,255,255,.45);
+    transition: .45s;
+    }
+
+    .feed-hero:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 35px 70px rgba(99,102,241,.18);
+    }
+
+    .profile-wrapper {
+    position: relative;
+    display: inline-block;
+    }
+
+    .hero-profile {
+    width: 95px;
+    height: 95px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 15px 35px rgba(0,0,0,.18);
+    }
+
+   
+
+    .hero-greeting {
+    color: #6E9E6A;
+    font-weight: 700;
+    letter-spacing: .5px;
+    }
+
+    .hero-title {
+    font-size: 34px;
+    font-weight: 800;
+    margin-top: 8px;
+    color: #111827;
+    }
+
+    .hero-subtitle {
+    color: #64748b;
+    margin-top: 10px;
+    font-size: 17px;
+    }
+
+    /* ======================================
+    SEARCH
+    ======================================*/
+
+    .search-box {
+    background: white;
+    border-radius: 60px;
+    display: flex;
+    align-items: center;
+    padding: 15px 22px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    }
+
+    .search-box i {
+    color: #6E9E6A;
+    font-size: 20px;
+    margin-right: 14px;
+    }
+
+    .search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    background: transparent;
+    }
+
+    /* ======================================
+    STATS
+    ======================================*/
+
+    .glass-stat {
+    background: rgba(255,255,255,.82);
+    backdrop-filter: blur(18px);
+    border-radius: 25px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 18px 40px rgba(0,0,0,.08);
+    transition: .35s;
+    height: 100%;
+    }
+
+    .glass-stat:hover {
+    transform: translateY(-8px) scale(1.02);
+    }
+
+    .stat-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 26px;
+    }
+
+    .blue {
+    background: linear-gradient(135deg,#6E9E6A,#A8D1A3);
+    }
+
+    .red {
+    background: linear-gradient(135deg,#ef4444,#dc2626);
+    }
+
+    .green {
+    background: linear-gradient(135deg,#22c55e,#16a34a);
+    }
+
+    .glass-stat h2 {
+    font-size: 34px;
+    margin: 0;
+    font-weight: 800;
+    }
+
+    .glass-stat p {
+    margin: 0;
+    color: #64748b;
+    }
+
+    /* ======================================
+    TOOLBAR
+    ======================================*/
+
+    .feed-toolbar {
+    background: white;
+    border-radius: 18px;
+    padding: 18px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.08);
+    }
+
+    .badge-feed {
+    background: linear-gradient(135deg,#6E9E6A,#9333ea);
+    color: white;
+    padding: 9px 18px;
+    border-radius: 40px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    }
+
+    .live-dot {
+    width: 12px;
+    height: 12px;
+    background: #22c55e;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+    }
+
+    /* ======================================
+    POSTS
+    ======================================*/
+
+    .feed-post {
+    margin-bottom: 35px;
+    animation: fadeUp .7s ease;
+    transition: .4s;
+    }
+
+    .feed-post:hover {
+    transform: translateY(-4px);
+    }
+
+    /* ======================================
+    SIDEBAR
+    ======================================*/
+
+    .glass-widget {
+    background: rgba(255,255,255,.82);
+    backdrop-filter: blur(18px);
+    border-radius: 26px;
+    padding: 28px;
+    box-shadow: 0 18px 45px rgba(0,0,0,.08);
+    }
+
+    .widget-profile {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white;
+    box-shadow: 0 15px 35px rgba(0,0,0,.18);
+    }
+
+    .quick-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: #374151;
+    padding: 14px 18px;
+    border-radius: 14px;
+    margin-top: 12px;
+    transition: .3s;
+    font-weight: 600;
+    }
+
+    .quick-link:hover {
+    background: #eef2ff;
+    color: #A8D1A3;
+    transform: translateX(8px);
+    }
+
+    .status-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #edf2f7;
+    }
+
+    .status-item:last-child {
+    border: none;
+    }
+
+    .status-item strong {
+    color: #A8D1A3;
+    font-size: 18px;
+    }
+    /* ===================================================
+    CampusPulse+ PRO FEED UI
+    PART 3B
+    (Continue inside the same <style> tag)
+    ===================================================*/
+
+    /* ======================================
+    EMPTY FEED
+    ======================================*/
+
+    .empty-feed {
+    background: rgba(255,255,255,.82);
+    backdrop-filter: blur(18px);
+    border-radius: 30px;
+    padding: 80px 40px;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0,0,0,.08);
+    }
+
+    .empty-animation {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#6E9E6A,#9333ea);
+    color: #fff;
+    font-size: 70px;
+    animation: floatIcon 4s ease-in-out infinite;
+    box-shadow: 0 25px 60px rgba(99,102,241,.35);
+    }
+
+    .empty-feed h2 {
+    margin-top: 35px;
+    font-size: 36px;
+    font-weight: 800;
+    color: #111827;
+    }
+
+    .empty-feed p {
+    color: #64748b;
+    font-size: 18px;
+    margin-top: 15px;
+    }
+
+    /* ======================================
+    BACK TO TOP
+    ======================================*/
+
+    #topBtn {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#6E9E6A,#8b5cf6);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    display: none;
+    z-index: 999;
+    box-shadow: 0 18px 45px rgba(99,102,241,.45);
+    transition: .35s;
+    }
+
+    #topBtn:hover {
+    transform: translateY(-6px) scale(1.1);
+    }
+
+    /* ======================================
+    PAGE LOADER
+    ======================================*/
+
+    #pageLoader {
+    position: fixed;
+    inset: 0;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    transition: .8s;
+    }
+
+    .loader-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 8px solid #eef2ff;
+    border-top: 8px solid #6E9E6A;
+    animation: spin 1s linear infinite;
+    }
+
+    /* ======================================
+    SCROLL BAR
+    ======================================*/
+
+    ::-webkit-scrollbar {
+    width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+    background: #edf2f7;
+    }
+
+    ::-webkit-scrollbar-thumb {
+    background: linear-gradient(#6E9E6A,#8b5cf6);
+    border-radius: 30px;
+    }
+
+    /* ======================================
+    SELECTION
+    ======================================*/
+
+    ::selection {
+    background: #6E9E6A;
+    color: white;
+    }
+
+    /* ======================================
+    HOVER EFFECTS
+    ======================================*/
+
+    button,
+    .btn,
+    .card,
+    .feed-hero,
+    .glass-widget,
+    .glass-stat {
+    transition: .35s;
+    }
+
+    .btn:hover {
+    transform: translateY(-3px);
+    }
+
+    /* ======================================
+    ANIMATIONS
+    ======================================*/
+
+    @@keyframes bgMove {
+
+    0% {
+    background-position: 0% 50%;
+    }
+
+    50% {
+    background-position: 100% 50%;
+    }
+
+    100% {
+    background-position: 0% 50%;
+    }
+    }
+
+    @@keyframes fadeUp {
+
+    from {
+    opacity: 0;
+    transform: translateY(40px);
+    }
+
+    to {
+    opacity: 1;
+    transform: translateY(0);
+    }
+    }
+
+    @@keyframes floatBlob {
+
+    0% {
+    transform: translateY(0) scale(1);
+    }
+
+    50% {
+    transform: translateY(-45px) scale(1.08);
+    }
+
+    100% {
+    transform: translateY(0) scale(1);
+    }
+    }
+
+    @@keyframes floatIcon {
+
+    0% {
+    transform: translateY(0);
+    }
+
+    50% {
+    transform: translateY(-15px);
+    }
+
+    100% {
+    transform: translateY(0);
+    }
+    }
+
+    @@keyframes pulse {
+
+    0% {
+    box-shadow: 0 0 0 0 rgba(34,197,94,.6);
+    }
+
+    70% {
+    box-shadow: 0 0 0 14px rgba(34,197,94,0);
+    }
+
+    100% {
+    box-shadow: 0 0 0 0 rgba(34,197,94,0);
+    }
+    }
+
+    @@keyframes spin {
+
+    from {
+    transform: rotate(0deg);
+    }
+
+    to {
+    transform: rotate(360deg);
+    }
+    }
+
+    /* ======================================
+    RESPONSIVE
+    ======================================*/
+
+    @@media (max - width:992px) {
+
+    .feed-wrapper {
+    padding: 20px;
+    }
+
+    .feed-hero {
+    padding: 30px;
+    }
+
+    .hero-title {
+    font-size: 28px;
+    }
+
+    .search-box {
+    margin-top: 25px;
+    }
+
+    .glass-widget {
+    margin-top: 25px;
+    }
+    }
+
+    @@media (max - width:768px) {
+
+    .hero-profile {
+    width: 70px;
+    height: 70px;
+    }
+
+    .hero-title {
+    font-size: 22px;
+    }
+
+    .hero-subtitle {
+    font-size: 15px;
+    }
+
+    .feed-toolbar {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    }
+
+    .glass-stat {
+    text-align: center;
+    flex-direction: column;
+    }
+
+    #topBtn {
+    width: 50px;
+    height: 50px;
+    right: 15px;
+    bottom: 15px;
+    }
+    }
+
+   @@media (max - width:576px) {
+
+    .feed-wrapper {
+    padding: 15px;
+    }
+
+    .feed-hero {
+    border-radius: 22px;
+    padding: 20px;
+    }
+
+    .glass-widget {
+    padding: 22px;
+    }
+
+    .glass-stat {
+    padding: 20px;
+    }
+    }
+
+</style>
+<script>
+
+    /* ===========================================
+    PAGE LOADER
+    ===========================================*/
+
+    window.addEventListener("load", function () {
+
+    const loader = document.getElementById("pageLoader");
+
+    if (loader) {
+
+    loader.style.opacity = "0";
+
+    setTimeout(function () {
+
+    loader.style.display = "none";
+
+    }, 700);
+
+    }
+
+    });
+
+    /* ===========================================
+    BACK TO TOP BUTTON
+    ===========================================*/
+
+    const topBtn = document.getElementById("topBtn");
+
+    window.addEventListener("scroll", function () {
+
+    if (window.scrollY > 350) {
+
+    topBtn.style.display = "block";
+
+    }
+    else {
+
+    topBtn.style.display = "none";
+
+    }
+
+    });
+
+    topBtn.onclick = function () {
+
+    window.scrollTo({
+
+    top: 0,
+
+    behavior: "smooth"
+
+    });
+
+    };
+
+    /* ===========================================
+    SEARCH POSTS
+    ===========================================*/
+    const searchInput = document.getElementById("searchPosts");
+
+    function clearPostSearch() {
+
+    searchInput.value = "";
+
+    searchInput.dispatchEvent(new Event("keyup"));
+
+    searchInput.focus();
+
+    }
+
+    if (searchInput) {
+
+    searchInput.addEventListener("keyup", function () {
+
+    const value = this.value.toLowerCase().trim();
+
+    const posts = document.querySelectorAll(".feed-post");
+
+    let visiblePosts = 0;
+
+    posts.forEach(function (post) {
+
+    if (post.innerText.toLowerCase().includes(value)) {
+
+    post.style.display = "";
+
+    visiblePosts++;
+
+    }
+    else {
+
+    post.style.display = "none";
+
+    }
+
+    });
+
+    const emptySearch = document.getElementById("noSearchResults");
+
+    if (emptySearch) {
+
+    if (visiblePosts === 0 && value !== "") {
+
+    emptySearch.style.display = "block";
+
+    }
+    else {
+
+    emptySearch.style.display = "none";
+
+    }
+
+    }
+
+    });
+
+    }
+
+    /* ===========================================
+    SCROLL REVEAL
+    ===========================================*/
+
+    const observer = new IntersectionObserver(function (entries) {
+
+    entries.forEach(function (entry) {
+
+    if (entry.isIntersecting) {
+
+    entry.target.style.opacity = "1";
+
+    entry.target.style.transform = "translateY(0px)";
+
+    }
+
+    });
+
+    },
+    {
+    threshold: .12
+    });
+
+    document.querySelectorAll(".feed-post,.glass-widget,.glass-stat").forEach(function (el) {
+
+    el.style.opacity = "0";
+
+    el.style.transform = "translateY(40px)";
+
+    el.style.transition = ".8s ease";
+
+    observer.observe(el);
+
+    });
+
+    /* ===========================================
+    FLOATING EFFECT
+    ===========================================*/
+
+    document.querySelectorAll(".glass-stat").forEach(function (card) {
+
+    card.addEventListener("mousemove", function (e) {
+
+    const rect = card.getBoundingClientRect();
+
+    const x = e.clientX - rect.left;
+
+    const y = e.clientY - rect.top;
+
+    const rotateX = -(y - rect.height / 2) / 18;
+
+    const rotateY = (x - rect.width / 2) / 18;
+
+    card.style.transform =
+    "perspective(1000px) rotateX(" +
+    rotateX +
+    "deg) rotateY(" +
+    rotateY +
+    "deg) scale(1.03)";
+
+    });
+
+    card.addEventListener("mouseleave", function () {
+
+    card.style.transform =
+    "perspective(1000px) rotateX(0deg) rotateY(0deg)";
+
+    });
+
+    });
+
+    /* ===========================================
+    SIDEBAR FLOAT EFFECT
+    ===========================================*/
+
+    document.querySelectorAll(".glass-widget").forEach(function (card) {
+
+    card.addEventListener("mouseenter", function () {
+
+    card.style.transform = "translateY(-10px)";
+
+    });
+
+    card.addEventListener("mouseleave", function () {
+
+    card.style.transform = "translateY(0px)";
+
+    });
+
+    });
+
+    /* ===========================================
+    AUTO HIGHLIGHT NEWEST POST
+    ===========================================*/
+
+    const firstPost = document.querySelector(".feed-post");
+
+    if (firstPost) {
+
+    firstPost.style.boxShadow =
+    "0 0 35px rgba(99,102,241,.25)";
+
+    setTimeout(function () {
+
+    firstPost.style.boxShadow = "";
+
+    }, 2500);
+
+    }
+
+    /* ===========================================
+    LIVE CLOCK
+    ===========================================*/
+
+    function updateClock() {
+
+    const clock = document.getElementById("liveClock");
+
+    if (!clock) return;
+
+    const now = new Date();
+
+    clock.innerHTML = now.toLocaleTimeString();
+
+    }
+
+    setInterval(updateClock, 1000);
+
+    updateClock();
+
+    /* ===========================================
+    RANDOM HERO GRADIENT
+    ===========================================*/
+
+    const hero = document.querySelector(".feed-hero");
+
+    const gradients = [
+
+    "linear-gradient(135deg,#ffffff,#eef2ff)",
+
+    "linear-gradient(135deg,#ffffff,#f0fdfa)",
+
+    "linear-gradient(135deg,#ffffff,#fef3c7)",
+
+    "linear-gradient(135deg,#ffffff,#ede9fe)"
+
+    ];
+
+    if (hero) {
+
+    hero.style.background = gradients[Math.floor(Math.random() * gradients.length)];
+
+    }
+
+
+    document.querySelectorAll(".glass-stat h2").forEach(function (counter) {
+
+    const target = parseInt(counter.innerText);
+
+    if (isNaN(target)) return;
+
+    let count = 0;
+
+    const speed = Math.max(1, Math.ceil(target / 60));
+
+    const timer = setInterval(function () {
+
+    count += speed;
+
+    if (count >= target) {
+
+    count = target;
+
+    clearInterval(timer);
+
+    }
+
+    counter.innerText = count;
+
+    }, 20);
+
+    });
+
+   
+
+    window.addEventListener("mousemove", function (e) {
+
+    document.querySelectorAll(".bg-circle").forEach(function (circle, index) {
+
+    const speed = (index + 1) * 10;
+
+    const x = (window.innerWidth - e.pageX * speed) / 250;
+
+    const y = (window.innerHeight - e.pageY * speed) / 250;
+
+    circle.style.transform =
+    "translate(" + x + "px," + y + "px)";
+
+    });
+
+    });
+
+    /* ===========================================
+    END
+    ===========================================*/
+
+</script>
+<div id="shareModalContainer"></div>
+<partial name="_Footer" />

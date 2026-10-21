@@ -1,0 +1,3552 @@
+﻿@model UserRole.ViewModel.CreatePostViewModel
+
+@{
+    ViewData["Title"] = "AI Content Studio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"/>
+
+<div class="content-studio">
+
+    <div class="container-fluid px-0">
+
+        <!-- ========================================= -->
+        <!-- HERO -->
+        <!-- ========================================= -->
+
+        <section class="studio-hero">
+
+            <div class="hero-left">
+
+                <span class="hero-badge">
+
+                    <i class="fa-solid fa-sparkles"></i>
+
+                    AI Powered Content Studio
+
+                </span>
+
+                <h1>
+
+                    Create Beautiful Campus Posts
+
+                </h1>
+
+                <p>
+
+                    Publish announcements, achievements, events,
+                    notices and updates with a modern publishing
+                    experience powered by Artificial Intelligence.
+
+                </p>
+
+                <div class="hero-features">
+
+                    <div class="feature-chip">
+
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        AI Caption
+
+                    </div>
+
+                    <div class="feature-chip">
+
+                        <i class="fa-solid fa-images"></i>
+
+                        Live Preview
+
+                    </div>
+
+                    <div class="feature-chip">
+
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                        Smart Upload
+
+                    </div>
+
+                    <div class="feature-chip">
+
+                        <i class="fa-solid fa-shield-heart"></i>
+
+                        Secure Publishing
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="hero-right">
+
+                <div class="hero-icon">
+
+                    <i class="fa-solid fa-photo-film"></i>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+        <!-- FORM -->
+        <!-- ========================================= -->
+
+        <form method="post"
+              enctype="multipart/form-data"
+              id="createPostForm">
+
+            @Html.AntiForgeryToken()
+
+            <div class="row g-4 mt-1">
+
+                <!-- ================================= -->
+                <!-- LEFT COLUMN -->
+                <!-- ================================= -->
+
+                <div class="col-xl-7">
+
+                    <div class="studio-card">
+
+                        <div class="card-header-modern">
+
+                            <div>
+
+                                <h3>
+
+                                    <i class="fa-solid fa-pen-nib"></i>
+
+                                    Write Your Caption
+
+                                </h3>
+
+                                <p>
+
+                                    Tell your audience what this post is about.
+
+                                </p>
+
+                            </div>
+
+                            <div class="header-icon">
+
+                                <i class="fa-solid fa-align-left"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-body-modern">
+
+                            <label asp-for="Caption"
+                                   class="modern-label">
+
+                                Caption
+
+                            </label>
+
+                            <textarea asp-for="Caption"
+                                      id="captionBox"
+                                      class="modern-textarea"
+                                      rows="10"
+                                      maxlength="1500"
+                                      placeholder="Share campus news, events, achievements, notices or anything exciting..."></textarea>
+
+                            <span asp-validation-for="Caption"
+                                  class="text-danger small"></span>
+
+                            <div class="caption-footer">
+
+                                <div class="character-counter">
+
+                                    <i class="fa-regular fa-keyboard"></i>
+
+                                    <span id="characterCount">
+
+                                        0
+
+                                    </span>
+
+                                    /1500 Characters
+
+                                </div>
+
+                                <button type="button"
+                                        id="aiCaptionButton"
+                                        class="btn-ai">
+
+                                    <i class="fa-solid fa-robot"></i>
+
+                                    Generate AI Caption
+
+                                </button>
+
+                            </div>
+
+                            <div id="loadingText"
+                                 class="ai-loading">
+
+                                <div class="spinner-border spinner-border-sm">
+
+                                </div>
+
+                                <span>
+
+                                    AI is writing a professional caption...
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- ================================= -->
+                <!-- RIGHT COLUMN -->
+                <!-- ================================= -->
+
+                <div class="col-xl-5">
+
+                    <!-- Upload Card -->
+
+                    <div class="studio-card mb-4">
+
+                        <div class="card-header-modern">
+
+                            <div>
+
+                                <h3>
+
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                                    Upload Media
+
+                                </h3>
+
+                                <p>
+
+                                    Images, Videos, PDF, Word, Excel, PPT, ZIP.
+
+                                </p>
+
+                            </div>
+
+                            <div class="header-icon">
+
+                                <i class="fa-solid fa-file-arrow-up"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-body-modern">
+
+                            <div class="upload-zone"
+                                 id="uploadZone">
+
+                                <input asp-for="MediaFile"
+                                       type="file"
+                                       id="mediaInput"
+                                       hidden />
+
+                                <div class="upload-icon">
+
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                                </div>
+
+                                <h4>
+
+                                    Drag & Drop Files
+
+                                </h4>
+
+                                <p>
+
+                                    or click below to browse files
+
+                                </p>
+
+                                <button type="button"
+                                        class="browse-btn"
+                                        onclick="document.getElementById('mediaInput').click()">
+
+                                    <i class="fa-solid fa-folder-open"></i>
+
+                                    Browse Files
+
+                                </button>
+
+                                <small>
+
+                                    Maximum file size depends on server configuration.
+
+                                </small>
+
+                            </div>
+
+                            <span asp-validation-for="MediaFile"
+                                  class="text-danger mt-2 d-block">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Preview Card -->
+
+                    <div class="studio-card">
+
+                        <div class="card-header-modern">
+
+                            <div>
+
+                                <h3>
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                    Live Preview
+
+                                </h3>
+
+                                <p>
+
+                                    Instantly preview the uploaded content.
+
+                                </p>
+
+                            </div>
+
+                            <div class="header-icon">
+
+                                <i class="fa-solid fa-photo-film"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-body-modern">
+
+                            <div class="preview-wrapper">
+
+                                <img id="previewImage"
+                                     class="preview-image"
+                                     alt="Preview" />
+
+                                <video id="previewVideo"
+                                       controls
+                                       class="preview-video">
+                                </video>
+
+                                <div id="filePreview"
+                                     class="file-preview">
+
+                                    <div class="empty-preview">
+
+                                        <i class="fa-regular fa-image"></i>
+
+                                        <h5>
+
+                                            Nothing to Preview
+
+                                        </h5>
+
+                                        <p>
+
+                                            Upload a file to see a live preview here.
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ===================================== -->
+            <!-- ACTION BAR -->
+            <!-- ===================================== -->
+
+            <div class="publish-section mt-4">
+
+                <div class="publish-left">
+
+                    <button type="reset"
+                            class="btn-reset">
+
+                        <i class="fa-solid fa-rotate-left"></i>
+
+                        Reset
+
+                    </button>
+
+                    <a asp-controller="Post"
+                       asp-action="Feed"
+                       class="btn-feed">
+
+                        <i class="fa-solid fa-images"></i>
+
+                        Open Feed
+
+                    </a>
+
+                </div>
+
+                <div class="publish-right">
+
+                    <button type="submit"
+                            class="btn-publish">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                        Publish Post
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<style>
+/*=========================================================
+    CampusPulse+ AI CONTENT STUDIO
+=========================================================*/
+
+:root{
+
+--primary:#6E9E6A;
+--primary-dark:#A8D1A3;
+
+--secondary:#8b5cf6;
+--pink:#ec4899;
+--cyan:#06b6d4;
+--green:#10b981;
+--orange:#f59e0b;
+--red:#ef4444;
+
+--bg:#f4f7ff;
+--surface:#ffffff;
+
+--text:#111827;
+--text-light:#6b7280;
+
+--border:#e5e7eb;
+
+--shadow-sm:
+0 8px 20px rgba(15,23,42,.06);
+
+--shadow:
+0 18px 45px rgba(99,102,241,.10);
+
+--shadow-lg:
+0 35px 80px rgba(79,70,229,.18);
+
+--glass:
+rgba(255,255,255,.78);
+
+--radius:24px;
+
+--transition:.35s ease;
+
+}
+
+/*=========================================================
+BODY
+=========================================================*/
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+body{
+
+font-family:'Poppins',sans-serif;
+
+color:var(--text);
+
+background:
+
+radial-gradient(circle at top left,#dbeafe 0,#eef5ff 32%,#f8fbff 100%);
+
+min-height:100vh;
+
+overflow-x:hidden;
+
+position:relative;
+
+}
+
+/* Floating Background */
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+width:550px;
+
+height:550px;
+
+border-radius:50%;
+
+top:-220px;
+
+right:-180px;
+
+background:
+
+radial-gradient(
+
+rgba(99,102,241,.18),
+
+transparent 70%
+
+);
+
+pointer-events:none;
+
+z-index:-2;
+
+}
+
+body::after{
+
+content:"";
+
+position:fixed;
+
+width:450px;
+
+height:450px;
+
+border-radius:50%;
+
+bottom:-160px;
+
+left:-140px;
+
+background:
+
+radial-gradient(
+
+rgba(139,92,246,.16),
+
+transparent 70%
+
+);
+
+pointer-events:none;
+
+z-index:-2;
+
+}
+
+/*=========================================================
+PAGE WRAPPER
+=========================================================*/
+
+.content-studio{
+
+max-width:1500px;
+
+margin:auto;
+
+padding:45px 18px 70px;
+
+}
+
+/*=========================================================
+HERO
+=========================================================*/
+
+.studio-hero{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+gap:40px;
+
+padding:55px;
+
+border-radius:34px;
+
+position:relative;
+
+overflow:hidden;
+
+margin-bottom:35px;
+
+color:#fff;
+
+background:
+
+linear-gradient(
+135deg,
+#A8D1A3 0%,
+#7c3aed 45%,
+#06b6d4 100%
+);
+
+background-size:250%;
+
+animation:gradientFlow 10s linear infinite;
+
+box-shadow:var(--shadow-lg);
+
+}
+
+.studio-hero::before{
+
+content:"";
+
+position:absolute;
+
+width:650px;
+
+height:650px;
+
+border-radius:50%;
+
+top:-260px;
+
+right:-180px;
+
+background:
+
+rgba(255,255,255,.08);
+
+}
+
+.studio-hero::after{
+
+content:"";
+
+position:absolute;
+
+width:420px;
+
+height:420px;
+
+border-radius:50%;
+
+left:-150px;
+
+bottom:-180px;
+
+background:
+
+rgba(255,255,255,.06);
+
+}
+
+.studio-hero>*{
+
+position:relative;
+
+z-index:2;
+
+}
+
+.hero-left{
+
+flex:1;
+
+}
+
+.hero-right{
+
+width:220px;
+
+display:flex;
+
+justify-content:center;
+
+}
+
+/*=========================================================
+HERO TYPOGRAPHY
+=========================================================*/
+
+.hero-badge{
+
+display:inline-flex;
+
+align-items:center;
+
+gap:10px;
+
+padding:10px 22px;
+
+border-radius:999px;
+
+background:
+
+rgba(255,255,255,.16);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.25);
+
+font-weight:600;
+
+margin-bottom:24px;
+
+}
+
+.hero-badge i{
+
+color:#ffe082;
+
+}
+
+.studio-hero h1{
+
+font-size:52px;
+
+font-weight:800;
+
+line-height:1.1;
+
+margin-bottom:18px;
+
+}
+
+.studio-hero p{
+
+font-size:18px;
+
+line-height:1.9;
+
+max-width:720px;
+
+opacity:.95;
+
+}
+
+/*=========================================================
+FEATURE CHIPS
+=========================================================*/
+
+.hero-features{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:14px;
+
+margin-top:30px;
+
+}
+
+.feature-chip{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+padding:12px 20px;
+
+border-radius:999px;
+
+background:
+
+rgba(255,255,255,.14);
+
+backdrop-filter:blur(14px);
+
+border:1px solid rgba(255,255,255,.20);
+
+font-weight:600;
+
+transition:var(--transition);
+
+}
+
+.feature-chip:hover{
+
+transform:translateY(-4px);
+
+background:
+
+rgba(255,255,255,.22);
+
+}
+
+.feature-chip i{
+
+color:#ffe082;
+
+}
+
+/*=========================================================
+HERO ICON
+=========================================================*/
+
+.hero-icon{
+
+width:180px;
+
+height:180px;
+
+border-radius:40px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+background:
+
+rgba(255,255,255,.16);
+
+backdrop-filter:blur(25px);
+
+border:1px solid rgba(255,255,255,.25);
+
+box-shadow:
+
+0 20px 50px rgba(0,0,0,.12);
+
+}
+
+.hero-icon i{
+
+font-size:80px;
+
+color:#fff;
+
+}
+
+/*=========================================================
+GRID
+=========================================================*/
+
+#createPostForm .row{
+
+align-items:flex-start;
+
+}
+
+.col-xl-7,
+.col-xl-5{
+
+display:flex;
+
+flex-direction:column;
+
+gap:25px;
+
+}
+/*=========================================================
+STUDIO CARD
+=========================================================*/
+
+.studio-card{
+
+position:relative;
+
+overflow:hidden;
+
+background:var(--glass);
+
+backdrop-filter:blur(28px);
+
+-webkit-backdrop-filter:blur(28px);
+
+border:1px solid rgba(255,255,255,.55);
+
+border-radius:30px;
+
+box-shadow:var(--shadow);
+
+transition:all .35s ease;
+
+}
+
+.studio-card:hover{
+
+transform:translateY(-8px);
+
+box-shadow:
+
+0 35px 75px rgba(99,102,241,.18);
+
+}
+
+.studio-card::before{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+background:
+
+linear-gradient(
+130deg,
+transparent,
+rgba(255,255,255,.30),
+transparent
+);
+
+transform:translateX(-120%);
+
+pointer-events:none;
+
+}
+
+.studio-card:hover::before{
+
+transform:translateX(120%);
+
+transition:1.15s;
+
+}
+
+/*=========================================================
+CARD HEADER
+=========================================================*/
+
+.card-header-modern{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:30px 34px;
+
+border-bottom:1px solid rgba(226,232,240,.75);
+
+}
+
+.card-header-modern h3{
+
+margin:0;
+
+font-size:27px;
+
+font-weight:700;
+
+color:var(--text);
+
+}
+
+.card-header-modern h3 i{
+
+margin-right:10px;
+
+color:var(--primary);
+
+}
+
+.card-header-modern p{
+
+margin-top:10px;
+
+margin-bottom:0;
+
+color:var(--text-light);
+
+font-size:15px;
+
+line-height:1.7;
+
+}
+
+.header-icon{
+
+width:72px;
+
+height:72px;
+
+border-radius:22px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+color:#fff;
+
+font-size:28px;
+
+background:
+
+linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+
+box-shadow:
+
+0 15px 35px rgba(99,102,241,.25);
+
+flex-shrink:0;
+
+}
+
+/*=========================================================
+CARD BODY
+=========================================================*/
+
+.card-body-modern{
+
+padding:34px;
+
+}
+
+/*=========================================================
+LABEL
+=========================================================*/
+
+.modern-label{
+
+display:block;
+
+font-weight:700;
+
+color:var(--text);
+
+margin-bottom:15px;
+
+font-size:15px;
+
+letter-spacing:.3px;
+
+}
+
+/*=========================================================
+MODERN TEXTAREA
+=========================================================*/
+
+.modern-textarea{
+
+width:100%;
+
+min-height:260px;
+
+resize:none;
+
+padding:24px;
+
+border-radius:22px;
+
+border:2px solid transparent;
+
+outline:none;
+
+background:#f7f9ff;
+
+color:var(--text);
+
+font-size:16px;
+
+line-height:1.9;
+
+transition:all .35s ease;
+
+}
+
+.modern-textarea::placeholder{
+
+color:#9ca3af;
+
+}
+
+.modern-textarea:hover{
+
+background:#fff;
+
+}
+
+.modern-textarea:focus{
+
+background:#fff;
+
+border-color:var(--primary);
+
+box-shadow:
+
+0 15px 35px rgba(99,102,241,.12);
+
+}
+
+/*=========================================================
+CAPTION FOOTER
+=========================================================*/
+
+.caption-footer{
+
+margin-top:22px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+flex-wrap:wrap;
+
+gap:18px;
+
+}
+
+/*=========================================================
+CHARACTER COUNTER
+=========================================================*/
+
+.character-counter{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+padding:12px 18px;
+
+border-radius:50px;
+
+background:#eef2ff;
+
+color:var(--primary);
+
+font-weight:600;
+
+font-size:14px;
+
+}
+
+.character-counter i{
+
+font-size:16px;
+
+}
+
+#characterCount{
+
+font-weight:800;
+
+font-size:15px;
+
+color:var(--primary-dark);
+
+}
+
+/*=========================================================
+AI BUTTON
+=========================================================*/
+
+.btn-ai{
+
+border:none;
+
+outline:none;
+
+display:inline-flex;
+
+align-items:center;
+
+gap:12px;
+
+padding:15px 28px;
+
+border-radius:999px;
+
+color:#fff;
+
+cursor:pointer;
+
+font-weight:700;
+
+font-size:15px;
+
+transition:all .35s ease;
+
+background:
+
+linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+
+box-shadow:
+
+0 18px 35px rgba(99,102,241,.25);
+
+}
+
+.btn-ai i{
+
+font-size:18px;
+
+}
+
+.btn-ai:hover{
+
+transform:
+
+translateY(-3px)
+scale(1.02);
+
+box-shadow:
+
+0 25px 45px rgba(99,102,241,.35);
+
+}
+
+.btn-ai:active{
+
+transform:scale(.97);
+
+}
+
+/*=========================================================
+AI LOADING
+=========================================================*/
+
+.ai-loading{
+
+display:none;
+
+align-items:center;
+
+gap:14px;
+
+margin-top:25px;
+
+padding:16px 22px;
+
+border-radius:18px;
+
+background:#eef2ff;
+
+color:var(--primary);
+
+font-weight:600;
+
+}
+
+.ai-loading .spinner-border{
+
+width:20px;
+
+height:20px;
+
+}
+
+/*=========================================================
+VALIDATION
+=========================================================*/
+
+.text-danger{
+
+font-size:14px;
+
+margin-top:8px;
+
+display:block;
+
+}
+/*=========================================================
+UPLOAD ZONE
+=========================================================*/
+
+.upload-zone{
+
+position:relative;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+text-align:center;
+
+min-height:330px;
+
+padding:45px 30px;
+
+border:3px dashed #c7d2fe;
+
+border-radius:28px;
+
+cursor:pointer;
+
+background:
+linear-gradient(
+135deg,
+#f8faff,
+#eef4ff
+);
+
+transition:all .35s ease;
+
+overflow:hidden;
+
+}
+
+.upload-zone::before{
+
+content:"";
+
+position:absolute;
+
+width:420px;
+
+height:420px;
+
+border-radius:50%;
+
+background:
+radial-gradient(
+rgba(99,102,241,.08),
+transparent 70%
+);
+
+top:-220px;
+
+right:-170px;
+
+pointer-events:none;
+
+}
+
+.upload-zone:hover{
+
+transform:translateY(-6px);
+
+border-color:var(--primary);
+
+background:#ffffff;
+
+box-shadow:
+0 22px 55px rgba(99,102,241,.12);
+
+}
+
+.upload-zone.active{
+
+border-style:solid;
+
+border-color:var(--primary);
+
+background:#eef2ff;
+
+transform:scale(1.01);
+
+}
+
+/*=========================================================
+UPLOAD ICON
+=========================================================*/
+
+.upload-icon{
+
+width:95px;
+
+height:95px;
+
+border-radius:28px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+margin-bottom:25px;
+
+color:#fff;
+
+font-size:38px;
+
+background:
+linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+
+box-shadow:
+0 20px 40px rgba(99,102,241,.22);
+
+animation:floatIcon 3s ease-in-out infinite;
+
+}
+
+.upload-zone h4{
+
+font-size:24px;
+
+font-weight:700;
+
+color:var(--text);
+
+margin-bottom:10px;
+
+}
+
+.upload-zone p{
+
+color:var(--text-light);
+
+margin-bottom:20px;
+
+line-height:1.8;
+
+}
+
+.upload-zone small{
+
+color:#9ca3af;
+
+margin-top:18px;
+
+}
+
+/*=========================================================
+BROWSE BUTTON
+=========================================================*/
+
+.browse-btn{
+
+border:none;
+
+outline:none;
+
+color:#fff;
+
+cursor:pointer;
+
+font-weight:700;
+
+font-size:15px;
+
+padding:14px 28px;
+
+border-radius:50px;
+
+transition:.35s;
+
+background:
+linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+
+box-shadow:
+0 18px 35px rgba(99,102,241,.20);
+
+}
+
+.browse-btn:hover{
+
+transform:
+translateY(-3px)
+scale(1.03);
+
+box-shadow:
+0 24px 45px rgba(99,102,241,.30);
+
+}
+
+.browse-btn i{
+
+margin-right:10px;
+
+}
+
+/*=========================================================
+PREVIEW CARD
+=========================================================*/
+
+.preview-wrapper{
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+min-height:340px;
+
+border-radius:24px;
+
+overflow:hidden;
+
+background:
+linear-gradient(
+135deg,
+#f9fbff,
+#eef4ff
+);
+
+border:2px dashed #dbe4ff;
+
+position:relative;
+
+}
+
+/*=========================================================
+IMAGE PREVIEW
+=========================================================*/
+
+.preview-image{
+
+display:none;
+
+width:100%;
+
+max-height:420px;
+
+object-fit:cover;
+
+border-radius:20px;
+
+animation:fadePreview .45s ease;
+
+}
+
+/*=========================================================
+VIDEO PREVIEW
+=========================================================*/
+
+.preview-video{
+
+display:none;
+
+width:100%;
+
+border-radius:20px;
+
+animation:fadePreview .45s ease;
+
+}
+
+/*=========================================================
+FILE PREVIEW
+=========================================================*/
+
+.file-preview{
+
+width:100%;
+
+}
+
+.file-card{
+
+text-align:center;
+
+padding:45px 25px;
+
+}
+
+.file-card i{
+
+font-size:90px;
+
+margin-bottom:20px;
+
+}
+
+.file-card h4{
+
+font-size:22px;
+
+font-weight:700;
+
+color:var(--text);
+
+word-break:break-word;
+
+}
+
+.file-card p{
+
+margin-top:14px;
+
+color:var(--text-light);
+
+}
+
+.file-size{
+
+display:inline-block;
+
+margin-top:18px;
+
+padding:10px 18px;
+
+border-radius:40px;
+
+color:#fff;
+
+font-weight:600;
+
+background:
+linear-gradient(
+135deg,
+var(--primary),
+var(--secondary)
+);
+
+}
+
+/*=========================================================
+EMPTY PREVIEW
+=========================================================*/
+
+.empty-preview{
+
+text-align:center;
+
+padding:60px 20px;
+
+}
+
+.empty-preview i{
+
+font-size:80px;
+
+color:#c7d2fe;
+
+margin-bottom:25px;
+
+}
+
+.empty-preview h5{
+
+font-size:24px;
+
+font-weight:700;
+
+color:var(--text);
+
+margin-bottom:12px;
+
+}
+
+.empty-preview p{
+
+color:var(--text-light);
+
+max-width:300px;
+
+margin:auto;
+
+line-height:1.8;
+
+}
+
+/*=========================================================
+PUBLISH SECTION
+=========================================================*/
+
+.publish-section{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+flex-wrap:wrap;
+
+gap:20px;
+
+padding:28px 34px;
+
+border-radius:28px;
+
+background:var(--glass);
+
+backdrop-filter:blur(22px);
+
+border:1px solid rgba(255,255,255,.55);
+
+box-shadow:var(--shadow);
+
+}
+
+.publish-left{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:15px;
+
+}
+
+.publish-right{
+
+margin-left:auto;
+
+}
+
+/*=========================================================
+BUTTONS
+=========================================================*/
+
+.btn-reset,
+.btn-feed,
+.btn-publish{
+
+border:none;
+
+outline:none;
+
+cursor:pointer;
+
+text-decoration:none;
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+gap:10px;
+
+font-weight:700;
+
+transition:.35s;
+
+}
+
+/* Reset */
+
+.btn-reset{
+
+padding:14px 28px;
+
+border-radius:50px;
+
+color:var(--text);
+
+background:#eef2ff;
+
+}
+
+.btn-reset:hover{
+
+background:#dbe4ff;
+
+transform:translateY(-3px);
+
+}
+
+/* Feed */
+
+.btn-feed{
+
+padding:14px 28px;
+
+border-radius:50px;
+
+color:#fff;
+
+background:
+linear-gradient(
+135deg,
+var(--cyan),
+var(--primary)
+);
+
+box-shadow:
+0 18px 35px rgba(6,182,212,.20);
+
+}
+
+.btn-feed:hover{
+
+color:#fff;
+
+transform:
+translateY(-3px);
+
+}
+
+/* Publish */
+
+.btn-publish{
+
+color:#fff;
+
+font-size:17px;
+
+padding:16px 40px;
+
+border-radius:60px;
+
+background:
+linear-gradient(
+135deg,
+var(--green),
+#16a34a
+);
+
+box-shadow:
+0 22px 45px rgba(16,185,129,.25);
+
+}
+
+.btn-publish:hover{
+
+transform:
+translateY(-4px)
+scale(1.02);
+
+box-shadow:
+0 30px 60px rgba(16,185,129,.35);
+
+}
+
+.btn-publish i{
+
+font-size:18px;
+
+}
+/*=========================================================
+ANIMATIONS
+=========================================================*/
+
+@@keyframes gradientFlow{
+
+0%{
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+/*----------------------------------------*/
+
+2@keyframes floatIcon{
+
+0%{
+transform:translateY(0px);
+}
+
+50%{
+transform:translateY(-10px);
+}
+
+100%{
+transform:translateY(0px);
+}
+
+}
+
+/*----------------------------------------*/
+
+@@keyframes fadePreview{
+
+from{
+
+opacity:0;
+
+transform:
+scale(.96)
+translateY(18px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:
+scale(1)
+translateY(0);
+
+}
+
+}
+
+/*----------------------------------------*/
+
+@@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(30px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+/*----------------------------------------*/
+
+@@keyframes pulseGlow{
+
+0%{
+
+box-shadow:
+0 0 0 rgba(99,102,241,.20);
+
+}
+
+50%{
+
+box-shadow:
+0 0 35px rgba(99,102,241,.35);
+
+}
+
+100%{
+
+box-shadow:
+0 0 0 rgba(99,102,241,.20);
+
+}
+
+}
+
+/*----------------------------------------*/
+
+@@keyframes shimmer{
+
+0%{
+
+transform:translateX(-120%);
+
+}
+
+100%{
+
+transform:translateX(120%);
+
+}
+
+}
+
+/*----------------------------------------*/
+
+@@keyframes popIn{
+
+0%{
+
+opacity:0;
+
+transform:
+scale(.90);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:
+scale(1);
+
+}
+
+}
+
+/*=========================================================
+PAGE ANIMATION
+=========================================================*/
+
+.content-studio{
+
+animation:fadeUp .65s ease;
+
+}
+
+.studio-card{
+
+animation:fadeUp .55s ease;
+
+}
+
+.publish-section{
+
+animation:fadeUp .70s ease;
+
+}
+
+.hero-icon{
+
+animation:
+
+floatIcon 3.2s ease-in-out infinite,
+
+pulseGlow 4s infinite;
+
+}
+
+/*=========================================================
+HOVER EFFECTS
+=========================================================*/
+
+.upload-zone:hover .upload-icon{
+
+transform:
+
+scale(1.08)
+rotate(-5deg);
+
+}
+
+.btn-ai:hover i{
+
+transform:rotate(-12deg);
+
+transition:.35s;
+
+}
+
+.btn-publish:hover i{
+
+transform:translateX(5px);
+
+transition:.35s;
+
+}
+
+.feature-chip:hover i{
+
+transform:rotate(-12deg);
+
+transition:.35s;
+
+}
+
+.header-icon:hover{
+
+transform:
+
+rotate(-8deg)
+scale(1.08);
+
+transition:.35s;
+
+}
+
+/*=========================================================
+FOCUS EFFECTS
+=========================================================*/
+
+button:focus,
+
+input:focus,
+
+textarea:focus,
+
+a:focus{
+
+outline:none;
+
+}
+
+.modern-textarea:focus{
+
+animation:popIn .25s ease;
+
+}
+
+.browse-btn:focus,
+
+.btn-ai:focus,
+
+.btn-reset:focus,
+
+.btn-feed:focus,
+
+.btn-publish:focus{
+
+box-shadow:
+
+0 0 0 4px rgba(99,102,241,.18);
+
+}
+
+/*=========================================================
+GLASS HIGHLIGHT
+=========================================================*/
+
+.studio-card::after{
+
+content:"";
+
+position:absolute;
+
+inset:0;
+
+border-radius:30px;
+
+pointer-events:none;
+
+background:
+
+linear-gradient(
+
+180deg,
+
+rgba(255,255,255,.18),
+
+transparent 35%
+
+);
+
+}
+
+/*=========================================================
+CUSTOM SCROLLBAR
+=========================================================*/
+
+::-webkit-scrollbar{
+
+width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+background:#edf2ff;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+border-radius:30px;
+
+background:
+
+linear-gradient(
+
+var(--primary),
+
+var(--secondary)
+
+);
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+background:
+
+linear-gradient(
+
+var(--secondary),
+
+var(--primary)
+
+);
+
+}
+
+/*=========================================================
+TEXT SELECTION
+=========================================================*/
+
+::selection{
+
+color:#fff;
+
+background:var(--primary);
+
+}
+
+::-moz-selection{
+
+color:#fff;
+
+background:var(--primary);
+
+}
+
+/*=========================================================
+UTILITIES
+=========================================================*/
+
+.shadow-none{
+
+box-shadow:none !important;
+
+}
+
+.rounded-xl{
+
+border-radius:24px;
+
+}
+
+.cursor-pointer{
+
+cursor:pointer;
+
+}
+
+.text-gradient{
+
+background:
+
+linear-gradient(
+
+135deg,
+
+var(--primary),
+
+var(--secondary)
+
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+background-clip:text;
+
+}
+
+.glass{
+
+background:var(--glass);
+
+backdrop-filter:blur(20px);
+
+}
+
+.d-none{
+
+display:none;
+
+}
+
+.fade-show{
+
+display:block !important;
+
+animation:fadePreview .35s ease;
+
+}
+/*=========================================================
+RESPONSIVE
+=========================================================*/
+
+/* ===========================
+Large Desktop
+=========================== */
+
+@@media (max-width:1400px){
+
+.content-studio{
+
+max-width:1280px;
+
+}
+
+.studio-hero{
+
+padding:48px;
+
+}
+
+.studio-hero h1{
+
+font-size:46px;
+
+}
+
+.hero-icon{
+
+width:165px;
+height:165px;
+
+}
+
+.hero-icon i{
+
+font-size:72px;
+
+}
+
+}
+
+/* ===========================
+Laptop
+=========================== */
+
+@@media (max-width:1200px){
+
+.studio-hero{
+
+padding:42px;
+
+gap:30px;
+
+}
+
+.studio-hero h1{
+
+font-size:42px;
+
+}
+
+.studio-hero p{
+
+font-size:16px;
+
+}
+
+.hero-right{
+
+width:180px;
+
+}
+
+.hero-icon{
+
+width:145px;
+height:145px;
+border-radius:30px;
+
+}
+
+.hero-icon i{
+
+font-size:60px;
+
+}
+
+.card-header-modern{
+
+padding:26px;
+
+}
+
+.card-body-modern{
+
+padding:28px;
+
+}
+
+}
+
+/* ===========================
+Tablet
+=========================== */
+
+@@media (max-width:992px){
+
+.content-studio{
+
+padding:25px 15px 50px;
+
+}
+
+.studio-hero{
+
+flex-direction:column;
+
+text-align:center;
+
+padding:35px;
+
+}
+
+.hero-left{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+}
+
+.hero-features{
+
+justify-content:center;
+
+}
+
+.hero-right{
+
+width:100%;
+
+margin-top:20px;
+
+}
+
+.hero-icon{
+
+width:130px;
+height:130px;
+
+}
+
+.studio-hero h1{
+
+font-size:36px;
+
+}
+
+.studio-card{
+
+margin-bottom:20px;
+
+}
+
+.upload-zone{
+
+min-height:270px;
+
+}
+
+.preview-wrapper{
+
+min-height:280px;
+
+}
+
+.publish-section{
+
+flex-direction:column;
+
+align-items:stretch;
+
+}
+
+.publish-left{
+
+width:100%;
+
+justify-content:center;
+
+}
+
+.publish-right{
+
+width:100%;
+
+margin-left:0;
+
+}
+
+.btn-publish{
+
+width:100%;
+
+}
+
+}
+
+/* ===========================
+Mobile
+=========================== */
+
+@@media (max-width:768px){
+
+.studio-hero{
+
+padding:28px;
+
+border-radius:24px;
+
+}
+
+.studio-hero h1{
+
+font-size:30px;
+
+line-height:1.25;
+
+}
+
+.studio-hero p{
+
+font-size:15px;
+
+}
+
+.hero-badge{
+
+font-size:13px;
+
+padding:9px 16px;
+
+}
+
+.feature-chip{
+
+width:100%;
+
+justify-content:center;
+
+}
+
+.card-header-modern{
+
+flex-direction:column;
+
+text-align:center;
+
+gap:18px;
+
+}
+
+.header-icon{
+
+width:60px;
+height:60px;
+
+font-size:24px;
+
+}
+
+.card-header-modern h3{
+
+font-size:22px;
+
+}
+
+.modern-textarea{
+
+min-height:210px;
+
+padding:18px;
+
+font-size:15px;
+
+}
+
+.caption-footer{
+
+flex-direction:column;
+
+align-items:stretch;
+
+}
+
+.character-counter{
+
+justify-content:center;
+
+}
+
+.btn-ai{
+
+width:100%;
+
+justify-content:center;
+
+}
+
+.browse-btn{
+
+width:100%;
+
+}
+
+.upload-zone{
+
+padding:35px 18px;
+
+}
+
+.upload-icon{
+
+width:80px;
+height:80px;
+
+font-size:34px;
+
+}
+
+.upload-zone h4{
+
+font-size:22px;
+
+}
+
+.preview-wrapper{
+
+min-height:240px;
+
+}
+
+.empty-preview{
+
+padding:40px 15px;
+
+}
+
+.empty-preview i{
+
+font-size:60px;
+
+}
+
+.file-card{
+
+padding:30px 18px;
+
+}
+
+.file-card i{
+
+font-size:70px;
+
+}
+
+}
+
+/* ===========================
+Small Mobile
+=========================== */
+
+@@media (max-width:576px){
+
+.content-studio{
+
+padding:15px 10px 35px;
+
+}
+
+.studio-hero{
+
+padding:22px;
+
+}
+
+.studio-hero h1{
+
+font-size:26px;
+
+}
+
+.studio-hero p{
+
+font-size:14px;
+
+line-height:1.7;
+
+}
+
+.hero-icon{
+
+width:110px;
+height:110px;
+
+}
+
+.hero-icon i{
+
+font-size:48px;
+
+}
+
+.card-header-modern{
+
+padding:20px;
+
+}
+
+.card-body-modern{
+
+padding:20px;
+
+}
+
+.modern-textarea{
+
+min-height:180px;
+
+}
+
+.upload-zone{
+
+min-height:220px;
+
+}
+
+.upload-icon{
+
+width:70px;
+height:70px;
+
+font-size:30px;
+
+}
+
+.publish-section{
+
+padding:20px;
+
+}
+
+.publish-left{
+
+flex-direction:column;
+
+}
+
+.btn-reset,
+.btn-feed,
+.btn-publish{
+
+width:100%;
+
+justify-content:center;
+
+}
+
+.preview-wrapper{
+
+min-height:200px;
+
+}
+
+.preview-image,
+.preview-video{
+
+border-radius:14px;
+
+}
+
+}
+</style>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+}
+<script>
+
+    /*=========================================================
+    DOM REFERENCES
+    =========================================================*/
+
+    const mediaInput = document.getElementById("mediaInput");
+    const uploadZone = document.getElementById("uploadZone");
+
+    const previewImage = document.getElementById("previewImage");
+    const previewVideo = document.getElementById("previewVideo");
+    const filePreview = document.getElementById("filePreview");
+
+    const captionBox = document.getElementById("captionBox");
+    const characterCount = document.getElementById("characterCount");
+
+    const aiButton = document.getElementById("aiCaptionButton");
+    const loadingText = document.getElementById("loadingText");
+
+    let previousURL = null;
+
+    /*=========================================================
+    INITIALIZE
+    =========================================================*/
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+    initializeCharacterCounter();
+
+    initializeAutoGrow();
+
+    bindUploadEvents();
+
+    resetPreview();
+
+    });
+
+    /*=========================================================
+    CHARACTER COUNTER
+    =========================================================*/
+
+    function initializeCharacterCounter() {
+
+    updateCharacterCounter();
+
+    captionBox.addEventListener("input", () => {
+
+    updateCharacterCounter();
+
+    });
+
+    }
+
+    function updateCharacterCounter() {
+
+    const length = captionBox.value.length;
+
+    characterCount.textContent = length;
+
+    if (length < 1000) {
+
+        characterCount.style.color = "#A8D1A3";
+
+    }
+    else if (length < 1400) {
+
+    characterCount.style.color = "#f59e0b";
+
+    }
+    else {
+
+    characterCount.style.color = "#ef4444";
+
+    }
+
+    }
+
+    /*=========================================================
+    AUTO GROW TEXTAREA
+    =========================================================*/
+
+    function initializeAutoGrow() {
+
+    autoGrow();
+
+    captionBox.addEventListener("input", autoGrow);
+
+    }
+
+    function autoGrow() {
+
+    captionBox.style.height = "auto";
+
+    captionBox.style.height = captionBox.scrollHeight + "px";
+
+    }
+
+    /*=========================================================
+    FILE EVENTS
+    =========================================================*/
+
+    function bindUploadEvents() {
+
+    mediaInput.addEventListener("change", handleFileSelection);
+
+    }
+
+    /*=========================================================
+    FILE SELECT
+    =========================================================*/
+
+    function handleFileSelection(e) {
+
+    const file = e.target.files[0];
+
+    resetPreview();
+
+    if (!file)
+    return;
+
+    if (previousURL)
+    URL.revokeObjectURL(previousURL);
+
+    previousURL = URL.createObjectURL(file);
+
+    renderPreview(file);
+
+    }
+
+    /*=========================================================
+    RESET PREVIEW
+    =========================================================*/
+
+    function resetPreview() {
+
+    previewImage.style.display = "none";
+    previewVideo.style.display = "none";
+
+    previewImage.removeAttribute("src");
+    previewVideo.removeAttribute("src");
+
+    filePreview.innerHTML = `
+
+    <div class="empty-preview">
+
+    <i class="fa-regular fa-image"></i>
+
+    <h5>Nothing to Preview</h5>
+
+    <p>
+
+    Upload a file to see a live preview here.
+
+    </p>
+
+    </div>
+
+    `;
+
+    }
+
+    /*=========================================================
+    ANIMATE ELEMENT
+    =========================================================*/
+
+    function animateElement(element) {
+
+    element.animate(
+
+    [
+
+    {
+    opacity:0,
+    transform:"translateY(20px) scale(.95)"
+    },
+
+    {
+    opacity:1,
+    transform:"translateY(0) scale(1)"
+    }
+
+    ],
+
+    {
+
+    duration:400,
+
+    easing:"ease-out"
+
+    }
+
+    );
+
+    }
+/*=========================================================
+    PREVIEW RENDERER
+=========================================================*/
+
+function renderPreview(file) {
+
+    const type = file.type;
+
+    if (type.startsWith("image/")) {
+
+        showImagePreview();
+
+        return;
+    }
+
+    if (type.startsWith("video/")) {
+
+        showVideoPreview();
+
+        return;
+    }
+
+    showFileCard(file);
+
+}
+
+/*=========================================================
+    IMAGE PREVIEW
+=========================================================*/
+
+function showImagePreview() {
+
+    filePreview.innerHTML = "";
+
+    previewImage.src = previousURL;
+
+    previewImage.style.display = "block";
+
+    animateElement(previewImage);
+
+}
+
+/*=========================================================
+    VIDEO PREVIEW
+=========================================================*/
+
+function showVideoPreview() {
+
+    filePreview.innerHTML = "";
+
+    previewVideo.src = previousURL;
+
+    previewVideo.style.display = "block";
+
+    animateElement(previewVideo);
+
+}
+
+/*=========================================================
+    FILE CARD
+=========================================================*/
+
+function showFileCard(file) {
+
+    previewImage.style.display = "none";
+    previewVideo.style.display = "none";
+
+    previewImage.removeAttribute("src");
+    previewVideo.removeAttribute("src");
+
+    const info = getFileInfo(file);
+
+    filePreview.innerHTML = `
+
+        <div class="file-card">
+
+            <i class="fa-solid ${info.icon}"
+               style="color:${info.color}">
+            </i>
+
+            <h4>${file.name}</h4>
+
+            <p>${info.title}</p>
+
+            <span class="file-size">
+
+                ${formatFileSize(file.size)}
+
+            </span>
+
+        </div>
+
+    `;
+
+    animateElement(filePreview);
+
+}
+
+/*=========================================================
+    FILE INFORMATION
+=========================================================*/
+
+function getFileInfo(file) {
+
+    const ext = file.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+    switch (ext) {
+
+        case "pdf":
+
+            return {
+
+                icon: "fa-file-pdf",
+
+                color: "#ef4444",
+
+                title: "PDF Document"
+
+            };
+
+        case "doc":
+
+        case "docx":
+
+            return {
+
+                icon: "fa-file-word",
+
+                color: "#2563eb",
+
+                title: "Word Document"
+
+            };
+
+        case "xls":
+
+        case "xlsx":
+
+            return {
+
+                icon: "fa-file-excel",
+
+                color: "#16a34a",
+
+                title: "Excel Spreadsheet"
+
+            };
+
+        case "ppt":
+
+        case "pptx":
+
+            return {
+
+                icon: "fa-file-powerpoint",
+
+                color: "#ea580c",
+
+                title: "PowerPoint Presentation"
+
+            };
+
+        case "zip":
+
+        case "rar":
+
+        case "7z":
+
+            return {
+
+                icon: "fa-file-zipper",
+
+                color: "#64748b",
+
+                title: "Compressed Archive"
+
+            };
+
+        case "txt":
+
+            return {
+
+                icon: "fa-file-lines",
+
+                color: "#0f172a",
+
+                title: "Text File"
+
+            };
+
+        case "csv":
+
+            return {
+
+                icon: "fa-file-csv",
+
+                color: "#15803d",
+
+                title: "CSV File"
+
+            };
+
+        case "mp3":
+
+        case "wav":
+
+        case "aac":
+
+            return {
+
+                icon: "fa-file-audio",
+
+                color: "#0ea5e9",
+
+                title: "Audio File"
+
+            };
+
+        default:
+
+            return {
+
+                icon: "fa-file",
+
+                    color: "#6E9E6A",
+
+                title: "Document"
+
+            };
+
+    }
+
+}
+
+/*=========================================================
+    FILE SIZE FORMATTER
+=========================================================*/
+
+function formatFileSize(bytes) {
+
+    if (bytes === 0)
+        return "0 Bytes";
+
+    const units = [
+
+        "Bytes",
+        "KB",
+        "MB",
+        "GB",
+        "TB"
+
+    ];
+
+    const index = Math.floor(
+        Math.log(bytes) / Math.log(1024)
+    );
+
+    return (
+
+        bytes /
+        Math.pow(1024, index)
+
+    ).toFixed(2) +
+
+    " " +
+
+    units[index];
+
+}
+    /*=========================================================
+        DRAG & DROP
+    =========================================================*/
+
+    ["dragenter", "dragover"].forEach(eventName => {
+
+        uploadZone.addEventListener(eventName, e => {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            uploadZone.classList.add("active");
+
+        });
+
+    });
+
+    ["dragleave", "drop"].forEach(eventName => {
+
+        uploadZone.addEventListener(eventName, e => {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            uploadZone.classList.remove("active");
+
+        });
+
+    });
+
+    uploadZone.addEventListener("drop", e => {
+
+        if (!e.dataTransfer.files.length)
+            return;
+
+        mediaInput.files = e.dataTransfer.files;
+
+        mediaInput.dispatchEvent(new Event("change"));
+
+    });
+
+    /*=========================================================
+        AI CAPTION
+    =========================================================*/
+
+    if (aiButton) {
+
+        aiButton.addEventListener("click", generateAICaption);
+
+    }
+
+    async function generateAICaption() {
+
+        if (mediaInput.files.length === 0) {
+
+            Swal.fire({
+
+                icon: "warning",
+
+                title: "No Media Selected",
+
+                text: "Please upload a file first."
+
+            });
+
+            return;
+
+        }
+
+        loadingText.style.display = "flex";
+
+        aiButton.disabled = true;
+
+        aiButton.innerHTML = `
+            <span class="spinner-border spinner-border-sm"></span>
+            Generating...
+        `;
+
+        const formData = new FormData();
+
+        formData.append("file", mediaInput.files[0]);
+
+        try {
+
+            const response = await fetch("/Post/GenerateCaption", {
+
+                method: "POST",
+
+                body: formData
+
+            });
+
+            const result = await response.json();
+
+            loadingText.style.display = "none";
+
+            aiButton.disabled = false;
+
+            aiButton.innerHTML = `
+                <i class="fa-solid fa-robot"></i>
+                Generate AI Caption
+            `;
+
+            if (result.success) {
+
+                await typeWriter(result.caption);
+
+                Swal.fire({
+
+                    icon: "success",
+
+                    title: "Caption Generated",
+
+                    text: "AI generated a professional caption.",
+
+                    timer: 1800,
+
+                    showConfirmButton: false
+
+                });
+
+            }
+            else {
+
+                Swal.fire({
+
+                    icon: "error",
+
+                    title: "AI Error",
+
+                    text: result.caption
+
+                });
+
+            }
+
+        }
+        catch {
+
+            loadingText.style.display = "none";
+
+            aiButton.disabled = false;
+
+            aiButton.innerHTML = `
+                <i class="fa-solid fa-robot"></i>
+                Generate AI Caption
+            `;
+
+            Swal.fire({
+
+                icon: "error",
+
+                title: "Server Error",
+
+                text: "Unable to connect to AI service."
+
+            });
+
+        }
+
+    }
+
+    /*=========================================================
+        TYPEWRITER EFFECT
+    =========================================================*/
+
+    async function typeWriter(text) {
+
+        captionBox.value = "";
+
+        updateCharacterCounter();
+
+        for (let i = 0; i < text.length; i++) {
+
+            captionBox.value += text.charAt(i);
+
+            updateCharacterCounter();
+
+            autoGrow();
+
+            await sleep(12);
+
+        }
+
+    }
+
+    function sleep(ms) {
+
+        return new Promise(resolve => setTimeout(resolve, ms));
+
+    }
+
+    /*=========================================================
+        RESET
+    =========================================================*/
+
+    const form = document.getElementById("createPostForm");
+
+    form.addEventListener("reset", () => {
+
+        setTimeout(() => {
+
+            if (previousURL) {
+
+                URL.revokeObjectURL(previousURL);
+
+                previousURL = null;
+
+            }
+
+            resetPreview();
+
+            captionBox.style.height = "auto";
+
+            updateCharacterCounter();
+
+            loadingText.style.display = "none";
+
+        }, 50);
+
+    });
+
+    /*=========================================================
+        IMAGE / VIDEO LOAD ANIMATION
+    =========================================================*/
+
+    previewImage.onload = () => {
+
+        animateElement(previewImage);
+
+    };
+
+    previewVideo.onloadeddata = () => {
+
+        animateElement(previewVideo);
+
+    };
+
+    /*=========================================================
+        PREVENT DOUBLE SUBMIT
+    =========================================================*/
+
+    form.addEventListener("submit", function () {
+
+        const submitButton = document.querySelector(".btn-publish");
+
+        submitButton.disabled = true;
+
+        submitButton.innerHTML = `
+
+            <span class="spinner-border spinner-border-sm me-2"></span>
+
+            Publishing...
+
+        `;
+
+    });
+
+    /*=========================================================
+        INITIAL ANIMATION
+    =========================================================*/
+
+    window.addEventListener("load", () => {
+
+        document
+            .querySelectorAll(".studio-card")
+            .forEach((card, index) => {
+
+                card.animate(
+
+                    [
+
+                        {
+                            opacity: 0,
+                            transform: "translateY(35px)"
+                        },
+
+                        {
+                            opacity: 1,
+                            transform: "translateY(0)"
+                        }
+
+                    ],
+
+                    {
+
+                        duration: 500,
+
+                        delay: index * 120,
+
+                        easing: "ease-out",
+
+                        fill: "both"
+
+                    }
+
+                );
+
+            });
+
+    });
+
+    /*=========================================================
+        END OF SCRIPT
+    =========================================================*/
+
+</script>
+<partial name="_Footer" />
