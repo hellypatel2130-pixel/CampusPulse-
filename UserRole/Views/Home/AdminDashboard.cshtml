@@ -1,0 +1,1101 @@
+﻿@using UserRole.Models
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var recentPosts = ViewBag.RecentPosts as List<Post>;
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+:root{
+
+    --primary:#5B5CEB;
+    --primary-light:#EEF0FF;
+
+    --success:#16A34A;
+    --success-light:#ECFDF3;
+
+    --danger:#DC2626;
+    --danger-light:#FEF2F2;
+
+    --warning:#EA580C;
+    --warning-light:#FFF7ED;
+
+    --info:#0891B2;
+    --info-light:#ECFEFF;
+
+    --purple:#7C3AED;
+    --purple-light:#F5F3FF;
+
+    --teal:#0F766E;
+    --teal-light:#F0FDFA;
+
+    --dark:#0F172A;
+    --text:#334155;
+    --muted:#94A3B8;
+
+    --border:#E8EDF5;
+
+    --card:#FFFFFF;
+
+    --shadow:
+        0 10px 30px rgba(15,23,42,.05);
+
+    --shadow-hover:
+        0 25px 60px rgba(15,23,42,.12);
+
+}
+
+body{
+
+    background:#F5F7FB;
+
+}
+
+.dashboard-wrapper{
+
+    max-width:1600px;
+
+    margin:auto;
+
+    padding:35px;
+
+}
+
+/*=============================
+WELCOME
+=============================*/
+
+.welcome-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:white;
+
+    border-radius:28px;
+
+    padding:38px;
+
+    border:1px solid var(--border);
+
+    box-shadow:var(--shadow);
+
+    margin-bottom:35px;
+
+}
+
+.welcome-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    right:-120px;
+
+    top:-120px;
+
+    width:320px;
+
+    height:320px;
+
+    background:radial-gradient(circle,
+    rgba(91,92,235,.16),
+    transparent 70%);
+
+}
+
+.welcome-title{
+
+    font-size:36px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+    margin-bottom:12px;
+
+}
+
+.welcome-text{
+
+    color:#64748B;
+
+    font-size:16px;
+
+    margin-bottom:0;
+
+}
+
+/*=============================
+STAT CARDS
+=============================*/
+
+.stats-grid{
+
+    margin-bottom:35px;
+
+}
+
+.stat-card{
+
+    position:relative;
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:28px;
+
+    border:1px solid var(--border);
+
+    overflow:hidden;
+
+    height:100%;
+
+    transition:.35s;
+
+    box-shadow:var(--shadow);
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:var(--shadow-hover);
+
+}
+
+.stat-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:-40px;
+
+    bottom:-40px;
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:rgba(91,92,235,.05);
+
+}
+
+.stat-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.stat-icon{
+
+    width:68px;
+
+    height:68px;
+
+    border-radius:22px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:28px;
+
+}
+
+.icon-users{
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+}
+
+.icon-post{
+
+    background:var(--success-light);
+
+    color:var(--success);
+
+}
+
+.icon-like{
+
+    background:var(--danger-light);
+
+    color:var(--danger);
+
+}
+
+.icon-file{
+
+    background:var(--warning-light);
+
+    color:var(--warning);
+
+}
+
+.icon-image{
+
+    background:var(--info-light);
+
+    color:var(--info);
+
+}
+
+.icon-video{
+
+    background:var(--purple-light);
+
+    color:var(--purple);
+
+}
+
+.icon-doc{
+
+    background:var(--teal-light);
+
+    color:var(--teal);
+
+}
+
+.stat-count{
+
+    font-size:44px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+    line-height:1;
+
+    margin-bottom:12px;
+
+}
+
+.stat-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:var(--dark);
+
+}
+
+.stat-desc{
+
+    margin-top:8px;
+
+    color:#94A3B8;
+
+    font-size:14px;
+
+}
+
+/*=============================
+SECTION CARD
+=============================*/
+
+.section-card{
+
+    background:white;
+
+    border-radius:26px;
+
+    border:1px solid var(--border);
+
+    padding:30px;
+
+    margin-bottom:30px;
+
+    box-shadow:var(--shadow);
+
+}
+
+.section-title{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:24px;
+
+}
+
+.section-title h3{
+
+    margin:0;
+
+    font-size:26px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+}
+
+/*=============================
+TABLE
+=============================*/
+
+.table{
+
+    margin-bottom:0;
+
+}
+
+.table thead tr{
+
+    background:#F8FAFC;
+
+}
+
+.table thead th{
+
+    border:none;
+
+    color:#64748B;
+
+    font-weight:700;
+
+    padding:18px;
+
+}
+
+.table tbody td{
+
+    padding:20px 18px;
+
+    border-color:#EEF2F7;
+
+    vertical-align:middle;
+
+}
+
+.table-hover tbody tr{
+
+    transition:.25s;
+
+}
+
+.table-hover tbody tr:hover{
+
+    background:#FAFBFF;
+
+}
+
+/*=============================
+BADGES
+=============================*/
+
+.file-badge{
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    font-weight:600;
+
+    font-size:13px;
+
+}
+
+/*=============================
+BUTTONS
+=============================*/
+
+.btn{
+
+    border-radius:14px;
+
+    padding:12px 22px;
+
+    font-weight:600;
+
+}
+
+/*=============================
+SUPPORT CARD
+=============================*/
+
+.support-card{
+
+    background:white;
+
+    border-radius:24px;
+
+    border:1px solid var(--border);
+
+    padding:30px;
+
+    box-shadow:var(--shadow);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:30px;
+
+}
+
+.support-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:22px;
+
+}
+
+.support-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:22px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#FFF7ED;
+
+    color:#EA580C;
+
+    font-size:28px;
+
+}
+
+.support-count{
+
+    font-size:38px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+}
+
+.support-text{
+
+    color:#64748B;
+
+}
+
+/*=============================
+RESPONSIVE
+=============================*/
+
+@@media (max-width:992px){
+
+.dashboard-wrapper{
+
+padding:20px;
+
+}
+
+.welcome-title{
+
+font-size:30px;
+
+}
+
+.stat-count{
+
+font-size:36px;
+
+}
+
+.support-card{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:20px;
+
+}
+
+}
+    /*==================================
+    QUICK ACTIONS
+    ==================================*/
+
+    .action-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        transition: .35s;
+        height: 100%;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .action-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: .35s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+            .action-card:hover::before {
+                transform: scaleY(1);
+            }
+
+    .action-icon {
+        width: 62px;
+        height: 62px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .action-content {
+        flex: 1;
+    }
+
+        .action-content h5 {
+            color: var(--dark);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .action-content p {
+            margin: 0;
+            color: #64748B;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+    .action-arrow {
+        font-size: 20px;
+        color: #94A3B8;
+        transition: .35s;
+    }
+
+    .action-card:hover .action-arrow {
+        transform: translateX(6px);
+        color: var(--primary);
+    }
+</style>
+<div class="dashboard-wrapper">
+
+    <!-- ===================================== -->
+    <!-- Welcome Section -->
+    <!-- ===================================== -->
+
+    <div class="welcome-card">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8">
+
+                <h1 class="welcome-title">
+
+                    Welcome back, Admin 👋
+
+                </h1>
+
+                <p class="welcome-text">
+
+                    Manage CampusPulse+ from one place. Monitor users, posts,
+                    uploaded resources and platform activities with a modern
+                    administration dashboard.
+
+                </p>
+
+            </div>
+
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+
+                <a href="/Post/Create"
+                   class="btn btn-primary">
+
+                    <i class="fa-solid fa-plus me-2"></i>
+
+                    Create New Post
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================== -->
+    <!-- Recent Uploads -->
+    <!-- ===================================== -->
+
+    <div class="section-card">
+
+        <div class="section-title">
+
+            <h3>
+
+                <i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>
+
+                Recent Uploads
+
+            </h3>
+
+            <span class="badge rounded-pill bg-light text-dark px-3 py-2">
+
+                @(recentPosts?.Count ?? 0) Recent
+
+            </span>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width:90px;">
+
+                            #
+
+                        </th>
+
+                        <th>
+
+                            Caption
+
+                        </th>
+
+                        <th style="width:170px;">
+
+                            File Type
+
+                        </th>
+
+                        <th style="width:180px;">
+
+                            Upload Date
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (recentPosts != null && recentPosts.Any())
+                    {
+                        foreach (var post in recentPosts)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+
+                                        #@post.Id
+
+                                    </strong>
+
+                                </td>
+
+                                <td>
+
+                                    @if (!string.IsNullOrWhiteSpace(post.Caption))
+                                    {
+                                        <div class="fw-semibold text-dark">
+
+                                            @post.Caption
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+
+                                            No Caption
+
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    @if (post.FileType.StartsWith("image"))
+                                    {
+                                        <span class="file-badge bg-primary-subtle text-primary">
+
+                                            <i class="fa-solid fa-image me-2"></i>
+
+                                            Image
+
+                                        </span>
+                                    }
+                                    else if (post.FileType.StartsWith("video"))
+                                    {
+                                        <span class="file-badge bg-danger-subtle text-danger">
+
+                                            <i class="fa-solid fa-video me-2"></i>
+
+                                            Video
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="file-badge bg-secondary-subtle text-secondary">
+
+                                            <i class="fa-solid fa-file-lines me-2"></i>
+
+                                            Document
+
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <div class="fw-semibold">
+
+                                        @post.CreatedAt.ToString("dd MMM yyyy")
+
+                                    </div>
+
+                                    <small class="text-muted">
+
+                                        @post.CreatedAt.ToString("hh:mm tt")
+
+                                    </small>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+
+                            <td colspan="4" class="text-center py-5">
+
+                                <div class="my-4">
+
+                                    <i class="fa-regular fa-folder-open fa-4x text-secondary mb-4"></i>
+
+                                    <h5 class="fw-bold">
+
+                                        No Uploads Found
+
+                                    </h5>
+
+                                    <p class="text-muted mb-0">
+
+                                        Recently uploaded files will appear here.
+
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+    <!-- ===================================== -->
+    <!-- Admin Quick Actions -->
+    <!-- ===================================== -->
+
+    <div class="section-card">
+
+        <div class="section-title">
+
+            <h3>
+
+                <i class="fa-solid fa-bolt me-2 text-warning"></i>
+
+                Admin Quick Actions
+
+            </h3>
+
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Create Post -->
+
+            <div class="col-lg-4 col-md-6">
+
+                <a href="/Post/Create"
+                   class="text-decoration-none">
+
+                    <div class="action-card">
+
+                        <div class="action-icon bg-primary-subtle text-primary">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                        </div>
+
+                        <div class="action-content">
+
+                            <h5>
+
+                                Create Post
+
+                            </h5>
+
+                            <p>
+
+                                Publish announcements, study materials or
+                                important updates for students.
+
+                            </p>
+
+                        </div>
+
+                        <div class="action-arrow">
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- Open Feed -->
+
+            <div class="col-lg-4 col-md-6">
+
+                <a href="/Post/Feed"
+                   class="text-decoration-none">
+
+                    <div class="action-card">
+
+                        <div class="action-icon bg-success-subtle text-success">
+
+                            <i class="fa-solid fa-newspaper"></i>
+
+                        </div>
+
+                        <div class="action-content">
+
+                            <h5>
+
+                                Open Feed
+
+                            </h5>
+
+                            <p>
+
+                                Browse all posts shared across the platform
+                                in chronological order.
+
+                            </p>
+
+                        </div>
+
+                        <div class="action-arrow">
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- View Users -->
+
+            <div class="col-lg-4 col-md-6">
+
+                <a href="/Profile/Search"
+                   class="text-decoration-none">
+
+                    <div class="action-card">
+
+                        <div class="action-icon bg-info-subtle text-info">
+
+                            <i class="fa-solid fa-users"></i>
+
+                        </div>
+
+                        <div class="action-content">
+
+                            <h5>
+
+                                Manage Users
+
+                            </h5>
+
+                            <p>
+
+                                Search students, review profiles and manage
+                                community members.
+
+                            </p>
+
+                        </div>
+
+                        <div class="action-arrow">
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- ===================================== -->
+    <!-- Support Center -->
+    <!-- ===================================== -->
+
+    <div class="support-card">
+
+        <div class="support-left">
+
+            <div class="support-icon">
+
+                <i class="fa-solid fa-headset"></i>
+
+            </div>
+
+            <div>
+
+                <div class="support-count">
+
+                    @ViewBag.TotalSupportTickets
+
+                </div>
+
+                <div class="support-text">
+
+                    Total Support Tickets
+
+                </div>
+
+                @if (ViewBag.PendingSupportTickets > 0)
+                {
+                    <div class="mt-2">
+
+                        <span class="badge bg-danger rounded-pill px-3 py-2">
+
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+
+                            @ViewBag.PendingSupportTickets Pending
+
+                        </span>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-2">
+
+                        <span class="badge bg-success rounded-pill px-3 py-2">
+
+                            <i class="fa-solid fa-circle-check me-1"></i>
+
+                            No Pending Tickets
+
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <a asp-controller="Support"
+               asp-action="AdminTickets"
+               class="btn btn-warning">
+
+                <i class="fa-solid fa-ticket me-2"></i>
+
+                Manage Tickets
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<partial name="_Footer" />

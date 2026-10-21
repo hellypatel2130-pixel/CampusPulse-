@@ -1,0 +1,1461 @@
+﻿@model UserRole.Models.Users
+
+@{
+    ViewData["Title"] = "Student Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+:root{
+
+    --primary:#5B5CEB;
+    --primary-light:#EEF1FF;
+
+    --success:#16A34A;
+    --success-light:#ECFDF3;
+
+    --warning:#F59E0B;
+    --warning-light:#FFF8E6;
+
+    --danger:#EF4444;
+    --danger-light:#FEF2F2;
+
+    --info:#0891B2;
+    --info-light:#ECFEFF;
+
+    --dark:#0F172A;
+    --text:#475569;
+    --muted:#94A3B8;
+
+    --border:#E8EDF5;
+
+    --card:#FFFFFF;
+
+    --shadow:
+        0 12px 35px rgba(15,23,42,.06);
+
+    --shadow-hover:
+        0 25px 60px rgba(15,23,42,.12);
+
+}
+
+body{
+
+    background:#F5F7FB;
+
+}
+
+.dashboard-container{
+
+    max-width:1500px;
+
+    margin:auto;
+
+    padding:35px;
+
+}
+
+/*================================================
+HERO
+================================================*/
+
+.hero-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:white;
+
+    border-radius:30px;
+
+    border:1px solid var(--border);
+
+    box-shadow:var(--shadow);
+
+    margin-bottom:35px;
+
+}
+
+.hero-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:420px;
+
+    height:420px;
+
+    right:-150px;
+
+    top:-150px;
+
+    border-radius:50%;
+
+    background:radial-gradient(circle,
+    rgba(91,92,235,.12),
+    transparent 70%);
+
+}
+
+.hero-card .card-body{
+
+    padding:40px;
+
+}
+
+.profile-img{
+
+    width:170px;
+
+    height:170px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:6px solid white;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.18);
+
+}
+
+.hero-title{
+
+    font-size:38px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+    margin-bottom:15px;
+
+}
+
+.hero-sub{
+
+    color:#64748B;
+
+    font-size:17px;
+
+}
+
+.hero-info{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:14px;
+
+    margin-top:20px;
+
+}
+
+.info-chip{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    background:#F8FAFC;
+
+    border:1px solid var(--border);
+
+    border-radius:50px;
+
+    padding:12px 20px;
+
+    color:var(--text);
+
+    font-weight:600;
+
+}
+
+.info-chip i{
+
+    color:var(--primary);
+
+}
+
+/*================================================
+STATISTICS
+================================================*/
+
+.stat-card{
+
+    position:relative;
+
+    background:white;
+
+    border-radius:24px;
+
+    border:1px solid var(--border);
+
+    padding:28px;
+
+    height:100%;
+
+    overflow:hidden;
+
+    transition:.35s;
+
+    box-shadow:var(--shadow);
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:var(--shadow-hover);
+
+}
+
+.stat-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:130px;
+
+    height:130px;
+
+    right:-45px;
+
+    bottom:-45px;
+
+    border-radius:50%;
+
+    background:rgba(91,92,235,.05);
+
+}
+
+.stat-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:22px;
+
+}
+
+.stat-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:20px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:26px;
+
+}
+
+.icon-post{
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+}
+
+.icon-followers{
+
+    background:var(--success-light);
+
+    color:var(--success);
+
+}
+
+.icon-following{
+
+    background:var(--warning-light);
+
+    color:var(--warning);
+
+}
+
+.stat-number{
+
+    font-size:44px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+    line-height:1;
+
+}
+
+.stat-title{
+
+    margin-top:12px;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:var(--dark);
+
+}
+
+.stat-text{
+
+    color:var(--muted);
+
+    font-size:14px;
+
+    margin-top:8px;
+
+}
+
+/*================================================
+SECTION CARD
+================================================*/
+
+.section-card{
+
+    background:white;
+
+    border-radius:26px;
+
+    border:1px solid var(--border);
+
+    box-shadow:var(--shadow);
+
+    margin-top:30px;
+
+}
+
+.section-card .card-body{
+
+    padding:30px;
+
+}
+
+.section-title{
+
+    font-size:26px;
+
+    font-weight:800;
+
+    color:var(--dark);
+
+    margin-bottom:25px;
+
+}
+
+/*================================================
+PROGRESS
+================================================*/
+
+.progress{
+
+    height:18px;
+
+    background:#EDF2F7;
+
+    border-radius:50px;
+
+    overflow:hidden;
+
+}
+
+.progress-bar{
+
+    font-weight:700;
+
+    font-size:13px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+/*================================================
+ACTION CARDS
+================================================*/
+
+.action-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    padding:22px;
+
+    transition:.35s;
+
+    box-shadow:var(--shadow);
+
+    height:100%;
+
+    text-decoration:none;
+
+}
+
+.action-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:var(--shadow-hover);
+
+}
+
+.action-icon{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+}
+
+.action-content{
+
+    flex:1;
+
+}
+
+.action-content h5{
+
+    margin-bottom:6px;
+
+    color:var(--dark);
+
+    font-weight:700;
+
+}
+
+.action-content p{
+
+    margin:0;
+
+    color:#64748B;
+
+    font-size:14px;
+
+}
+
+.action-arrow{
+
+    color:#94A3B8;
+
+    transition:.3s;
+
+}
+
+.action-card:hover .action-arrow{
+
+    color:var(--primary);
+
+    transform:translateX(6px);
+
+}
+
+/*================================================
+FEATURE BOX
+================================================*/
+
+.feature-box{
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    padding:30px;
+
+    text-align:center;
+
+    transition:.35s;
+
+    height:100%;
+
+    box-shadow:var(--shadow);
+
+}
+
+.feature-box:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:var(--shadow-hover);
+
+}
+
+.feature-icon{
+
+    width:78px;
+
+    height:78px;
+
+    margin:auto auto 18px;
+
+    border-radius:24px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:var(--primary-light);
+
+    color:var(--primary);
+
+    font-size:30px;
+
+}
+
+.feature-box h5{
+
+    color:var(--dark);
+
+    font-weight:700;
+
+}
+
+.feature-box p{
+
+    color:#64748B;
+
+    margin-top:10px;
+
+}
+
+/*================================================
+RESPONSIVE
+================================================*/
+
+@@media (max-width:991px){
+
+.dashboard-container{
+
+padding:20px;
+
+}
+
+.hero-card .card-body{
+
+padding:28px;
+
+}
+
+.profile-img{
+
+width:140px;
+
+height:140px;
+
+margin-bottom:25px;
+
+}
+
+.hero-title{
+
+font-size:30px;
+
+}
+
+.stat-number{
+
+font-size:36px;
+
+}
+
+}
+
+</style>
+<div class="container dashboard-container">
+
+    <!-- ===================================== -->
+    <!-- HERO SECTION -->
+    <!-- ===================================== -->
+
+    <div class="card hero-card">
+
+        <div class="card-body">
+
+            <div class="row align-items-center g-5">
+
+                <!-- Profile -->
+
+                <div class="col-lg-3 text-center">
+
+                    <img src="@(string.IsNullOrEmpty(Model.ProfilePicture)
+                                    ? "/images/default-user.png"
+                                    : Model.ProfilePicture)"
+                         class="profile-img" />
+
+                </div>
+
+                <!-- Information -->
+
+                <div class="col-lg-9">
+
+                    <h1 class="hero-title">
+
+                        Welcome Back,
+                        @Model.FullName 👋
+
+                    </h1>
+
+                    <p class="hero-sub">
+
+                        Here's your personal campus dashboard. Track your
+                        activity, connect with students, explore updates,
+                        and grow your academic network.
+
+                    </p>
+
+                    <div class="hero-info">
+
+                        <div class="info-chip">
+
+                            <i class="fa-solid fa-graduation-cap"></i>
+
+                            @Model.Department
+
+                        </div>
+
+                        <div class="info-chip">
+
+                            <i class="fa-solid fa-id-card"></i>
+
+                            @Model.EnrollmentNo
+
+                        </div>
+
+                        <div class="info-chip">
+
+                            <i class="fa-solid fa-user-check"></i>
+
+                            Active Student
+
+                        </div>
+
+                    </div>
+
+                    <div class="mt-4">
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Bio))
+                        {
+                            <p class="mb-0 text-secondary">
+
+                                @Model.Bio
+
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="mb-0 text-secondary">
+
+                                Complete your profile to help classmates
+                                know more about you.
+
+                            </p>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- Profile Completion -->
+    <!-- ===================================== -->
+
+    <div class="card section-card">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h3 class="section-title mb-0">
+
+                    <i class="fa-solid fa-chart-line me-2 text-success"></i>
+
+                    Profile Completion
+
+                </h3>
+
+                <span class="badge bg-success rounded-pill px-3 py-2">
+
+                    @ViewBag.ProfileCompletion%
+
+                </span>
+
+            </div>
+
+            <p class="text-muted mb-4">
+
+                A complete profile helps other students discover you and
+                increases your visibility across the campus community.
+
+            </p>
+
+            <div class="progress">
+
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                     role="progressbar"
+                     style="width:@ViewBag.ProfileCompletion%;">
+
+                    @ViewBag.ProfileCompletion%
+
+                </div>
+
+            </div>
+
+            @if (ViewBag.ProfileCompletion < 100)
+            {
+                <div class="alert alert-warning mt-4 mb-0 rounded-4 border-0">
+
+                    <i class="fa-solid fa-circle-info me-2"></i>
+
+                    Complete your profile by adding a profile picture,
+                    bio and other personal details.
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success mt-4 mb-0 rounded-4 border-0">
+
+                    <i class="fa-solid fa-circle-check me-2"></i>
+
+                    Excellent! Your profile is fully completed.
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- Quick Actions -->
+    <!-- ===================================== -->
+
+    <div class="card section-card">
+
+        <div class="card-body">
+
+            <h3 class="section-title">
+
+                <i class="fa-solid fa-bolt me-2 text-warning"></i>
+
+                Quick Actions
+
+            </h3>
+
+            <div class="row g-4">
+
+                <!-- Feed -->
+
+                <div class="col-lg-6">
+
+                    <a asp-controller="Post"
+                       asp-action="Feed"
+                       class="action-card">
+
+                        <div class="action-icon bg-primary-subtle text-primary">
+
+                            <i class="fa-solid fa-images"></i>
+
+                        </div>
+
+                        <div class="action-content">
+
+                            <h5>
+
+                                Open Feed
+
+                            </h5>
+
+                            <p>
+
+                                Discover the latest campus posts,
+                                announcements and shared resources.
+
+                            </p>
+
+                        </div>
+
+                        <div class="action-arrow">
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- Profile -->
+
+                <div class="col-lg-6">
+
+                    <a asp-controller="Profile"
+                       asp-action="Index"
+                       class="action-card">
+
+                        <div class="action-icon bg-success-subtle text-success">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                        <div class="action-content">
+
+                            <h5>
+
+                                My Profile
+
+                            </h5>
+
+                            <p>
+
+                                Update your profile, edit personal details
+                                and showcase your achievements.
+
+                            </p>
+
+                        </div>
+
+                        <div class="action-arrow">
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- Search -->
+
+                <div class="col-lg-6">
+
+                    <a asp-controller="Profile"
+                       asp-action="Search"
+                       class="action-card">
+
+                        <div class="action-icon bg-info-subtle text-info">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                        </div>
+
+                        <div class="action-content">
+
+                            <h5>
+
+                                Find Students
+
+                            </h5>
+
+                            <p>
+
+                                Search classmates, faculty members and
+                                expand your professional network.
+
+                            </p>
+
+                        </div>
+
+                        <div class="action-arrow">
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+
+
+                <!-- Inbox -->
+
+                <div class="col-lg-6">
+
+                    <a asp-controller="Message"
+                       asp-action="Inbox"
+                       class="action-card">
+
+                        <div class="action-icon bg-warning-subtle text-warning">
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                        </div>
+
+                        <div class="action-content">
+
+                            <h5>
+
+                                Inbox
+
+                            </h5>
+
+                            <p>
+
+                                Continue conversations, respond to messages
+                                and stay connected with your peers.
+
+                            </p>
+
+                        </div>
+
+                        <div class="action-arrow">
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- ===================================== -->
+    <!-- Campus Features -->
+    <!-- ===================================== -->
+
+    <div class="card section-card">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h3 class="section-title mb-0">
+
+                    <i class="fa-solid fa-graduation-cap me-2 text-primary"></i>
+
+                    Campus Features
+
+                </h3>
+
+                <span class="text-muted">
+
+                    Everything you need in one place
+
+                </span>
+
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Feed -->
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-images"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Campus Feed
+
+                        </h5>
+
+                        <p>
+
+                            Stay updated with announcements, study materials,
+                            events and daily campus activities.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Network -->
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-users"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Student Network
+
+                        </h5>
+
+                        <p>
+
+                            Connect with classmates, seniors,
+                            juniors and faculty members.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Messaging -->
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-comments"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Messaging
+
+                        </h5>
+
+                        <p>
+
+                            Chat privately, collaborate on projects
+                            and communicate instantly.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Resources -->
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-folder-open"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Resources
+
+                        </h5>
+
+                        <p>
+
+                            Access notes, PDFs, presentations,
+                            videos and academic files.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Collaboration -->
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-handshake"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Collaboration
+
+                        </h5>
+
+                        <p>
+
+                            Work together on assignments,
+                            research and college projects.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Achievements -->
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-trophy"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Achievements
+
+                        </h5>
+
+                        <p>
+
+                            Showcase certificates,
+                            competitions and campus accomplishments.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Security -->
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Secure Platform
+
+                        </h5>
+
+                        <p>
+
+                            Your academic data and conversations
+                            remain protected and secure.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Community -->
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-earth-asia"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Community
+
+                        </h5>
+
+                        <p>
+
+                            Build meaningful connections
+                            across your college community.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- ===================================== -->
+    <!-- Student Insights -->
+    <!-- ===================================== -->
+
+    <div class="card section-card">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h3 class="section-title mb-0">
+
+                    <i class="fa-solid fa-chart-pie me-2 text-primary"></i>
+
+                    Student Insights
+
+                </h3>
+
+                <span class="badge bg-primary rounded-pill px-3 py-2">
+
+                    CampusPulse+
+
+                </span>
+
+            </div>
+
+            <div class="row text-center g-4">
+
+                <div class="col-md-3">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-user-group"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Network
+
+                        </h5>
+
+                        <h2 class="fw-bold text-primary">
+
+                            @ViewBag.Followers
+
+                        </h2>
+
+                        <p>
+
+                            Students connected with you.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-file-circle-plus"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Contributions
+
+                        </h5>
+
+                        <h2 class="fw-bold text-success">
+
+                            @ViewBag.Posts
+
+                        </h2>
+
+                        <p>
+
+                            Posts shared with the community.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-address-card"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Profile
+
+                        </h5>
+
+                        <h2 class="fw-bold text-warning">
+
+                            @ViewBag.ProfileCompletion%
+
+                        </h2>
+
+                        <p>
+
+                            Completion progress.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="feature-box">
+
+                        <div class="feature-icon">
+
+                            <i class="fa-solid fa-user-check"></i>
+
+                        </div>
+
+                        <h5>
+
+                            Following
+
+                        </h5>
+
+                        <h2 class="fw-bold text-info">
+
+                            @ViewBag.Following
+
+                        </h2>
+
+                        <p>
+
+                            Students you follow.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ===================================== -->
+    <!-- Motivation Card -->
+    <!-- ===================================== -->
+
+    <div class="card section-card mb-4">
+
+        <div class="card-body text-center py-5">
+
+            <i class="fa-solid fa-graduation-cap fa-3x text-primary mb-4"></i>
+
+            <h3 class="fw-bold mb-3">
+
+                Keep Learning. Keep Sharing. Keep Growing.
+
+            </h3>
+
+            <p class="text-muted mx-auto"
+               style="max-width:700px;">
+
+                CampusPulse+ helps students collaborate through knowledge
+                sharing, networking, messaging and academic resources.
+                Every post, every connection and every contribution helps
+                build a stronger student community.
+
+            </p>
+
+            <a asp-controller="Post"
+               asp-action="Feed"
+               class="btn btn-primary btn-lg mt-3 px-4">
+
+                <i class="fa-solid fa-compass me-2"></i>
+
+                Explore Campus Feed
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<partial name="_Footer" />

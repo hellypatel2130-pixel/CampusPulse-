@@ -1,1 +1,1019 @@
+﻿@{
+    ViewData["Title"] = "CampusPulse+";
+}
 
+<!-- ===========================================================
+   PREMIUM HERO SECTION
+============================================================ -->
+
+<section class="cp-hero">
+
+    <!-- Background -->
+    <div class="cp-bg-shape shape-1"></div>
+    <div class="cp-bg-shape shape-2"></div>
+    <div class="cp-bg-grid"></div>
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <!-- LEFT -->
+            <div class="col-lg-6">
+
+                <span class="cp-badge">
+
+                    <i class="fa-solid fa-sparkles"></i>
+
+                    Modern Digital Campus
+
+                </span>
+
+                <h1 class="cp-title mt-4">
+
+                    Connect.
+
+                    <span>Collaborate.</span>
+
+                    Create Your
+
+                    Future.
+
+                </h1>
+
+                <p class="cp-desc">
+
+                    CampusPulse+ brings your entire college community
+                    together in one intelligent platform where students
+                    collaborate, share resources, communicate instantly,
+                    discover opportunities and grow together.
+
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 mt-5">
+
+                    @if (!User.Identity!.IsAuthenticated)
+                    {
+                        <a asp-controller="Account"
+                           asp-action="Register"
+                           class="btn cp-btn-primary">
+
+                            <i class="fa-solid fa-user-plus"></i>
+
+                            Get Started
+
+                        </a>
+
+                        <a asp-controller="Account"
+                           asp-action="Login"
+                           class="btn cp-btn-secondary">
+
+                            <i class="fa-solid fa-right-to-bracket"></i>
+
+                            Login
+
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Post"
+                           asp-action="Feed"
+                           class="btn cp-btn-primary">
+
+                            <i class="fa-solid fa-compass"></i>
+
+                            Explore Feed
+
+                        </a>
+                    }
+
+                </div>
+
+                <!-- TRUST -->
+
+                <div class="cp-trust">
+
+                    <div class="cp-avatars">
+
+                        <span>A</span>
+                        <span>S</span>
+                        <span>R</span>
+                        <span>+</span>
+
+                    </div>
+
+                    <div>
+
+                        <strong>@ViewBag.TotalUsers+ Students</strong>
+
+                        <small>already using CampusPulse+</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="col-lg-6 mt-5 mt-lg-0">
+
+                <div class="cp-dashboard">
+
+                    <!-- TOP -->
+
+                    <div class="cp-topbar">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+                    <!-- PROFILE -->
+
+                    <div class="cp-profile">
+
+                        <div class="cp-profile-img">
+
+                            <i class="fa-solid fa-user-graduate"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h5>
+
+                                Campus Community
+
+                            </h5>
+
+                            <p>
+
+                                Collaboration Dashboard
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- LIVE CARD -->
+
+                    <div class="cp-live-card">
+
+                        <div>
+
+                            <small>Active Students</small>
+
+                            <h3>@ViewBag.TotalUsers+</h3>
+
+                        </div>
+
+                        <i class="fa-solid fa-users"></i>
+
+                    </div>
+
+                    <div class="cp-live-card">
+
+                        <div>
+
+                            <small>Posts Shared</small>
+
+                            <h3>@ViewBag.TotalPosts+</h3>
+
+                        </div>
+
+                        <i class="fa-solid fa-image"></i>
+
+                    </div>
+
+                    <div class="cp-live-card">
+
+                        <div>
+
+                            <small>Discussions</small>
+
+                            <h3>24 / 7</h3>
+
+                        </div>
+
+                        <i class="fa-solid fa-comments"></i>
+
+                    </div>
+
+                   
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===========================================================
+ WHY CAMPUSPULSE+
+=========================================================== -->
+
+<section class="cp-why">
+
+    <div class="container">
+
+        <div class="text-center cp-heading">
+
+            <span class="cp-section-badge">
+
+                WHY CAMPUSPULSE+
+
+            </span>
+
+            <h2>
+
+                One Platform For Everything You Need
+
+            </h2>
+
+            <p>
+
+                Simplify communication, collaboration and learning with one
+                powerful digital campus ecosystem.
+
+            </p>
+
+        </div>
+
+        <div class="row g-4 align-items-center">
+
+            <!-- LEFT -->
+
+            <div class="col-lg-5">
+
+                <div class="cp-info-box">
+
+                    <span class="cp-mini-badge">
+
+                        SMART CAMPUS
+
+                    </span>
+
+                    <h3>
+
+                        Designed For Students.
+                        Built For Collaboration.
+
+                    </h3>
+
+                    <p>
+
+                        Whether you're sharing notes, working on projects,
+                        discussing assignments or following announcements,
+                        CampusPulse+ keeps everything connected in one place.
+
+                    </p>
+
+                    <ul class="cp-list">
+
+                        <li>
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            Secure Student Authentication
+
+                        </li>
+
+                        <li>
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            Fast Real-Time Communication
+
+                        </li>
+
+                        <li>
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            Project Collaboration Workspace
+
+                        </li>
+
+                        <li>
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            Smart File & Resource Sharing
+
+                        </li>
+
+                        <li>
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            Campus Announcements
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="col-lg-7">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <div class="cp-feature">
+
+                            <div class="cp-feature-icon blue">
+
+                                <i class="fa-solid fa-comments"></i>
+
+                            </div>
+
+                            <h4>
+
+                                Instant Messaging
+
+                            </h4>
+
+                            <p>
+
+                                Chat with classmates, project partners and faculty
+                                without leaving the platform.
+
+                            </p>
+
+                            <span>
+
+                                Real-time Conversations
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="cp-feature">
+
+                            <div class="cp-feature-icon purple">
+
+                                <i class="fa-solid fa-diagram-project"></i>
+
+                            </div>
+
+                            <h4>
+
+                                Project Workspace
+
+                            </h4>
+
+                            <p>
+
+                                Build projects together, exchange ideas and
+                                coordinate tasks efficiently.
+
+                            </p>
+
+                            <span>
+
+                                Team Collaboration
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="cp-feature">
+
+                            <div class="cp-feature-icon green">
+
+                                <i class="fa-solid fa-book-open"></i>
+
+                            </div>
+
+                            <h4>
+
+                                Resource Sharing
+
+                            </h4>
+
+                            <p>
+
+                                Upload notes, PDFs, presentations,
+                                documents and learning materials.
+
+                            </p>
+
+                            <span>
+
+                                Unlimited Resources
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="cp-feature">
+
+                            <div class="cp-feature-icon orange">
+
+                                <i class="fa-solid fa-bullhorn"></i>
+
+                            </div>
+
+                            <h4>
+
+                                Campus Updates
+
+                            </h4>
+
+                            <p>
+
+                                Stay informed with important announcements,
+                                events and academic notifications.
+
+                            </p>
+
+                            <span>
+
+                                Never Miss Updates
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="cp-feature">
+
+                            <div class="cp-feature-icon cyan">
+
+                                <i class="fa-solid fa-user-group"></i>
+
+                            </div>
+
+                            <h4>
+
+                                Student Network
+
+                            </h4>
+
+                            <p>
+
+                                Discover classmates, follow peers and build
+                                meaningful academic connections.
+
+                            </p>
+
+                            <span>
+
+                                Expand Your Network
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="cp-feature">
+
+                            <div class="cp-feature-icon pink">
+
+                                <i class="fa-solid fa-shield-halved"></i>
+
+                            </div>
+
+                            <h4>
+
+                                Secure Platform
+
+                            </h4>
+
+                            <p>
+
+                                Protected authentication with verification and
+                                secure user management.
+
+                            </p>
+
+                            <span>
+
+                                Privacy First
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ===========================================================
+   PLATFORM HIGHLIGHTS
+=========================================================== -->
+
+<section class="cp-highlight">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="cp-highlight-card">
+
+                    <i class="fa-solid fa-comments"></i>
+
+                    <h3>
+
+                        Instant Chat
+
+                    </h3>
+
+                    <p>
+
+                        Fast communication between students and faculty.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="cp-highlight-card">
+
+                    <i class="fa-solid fa-folder-open"></i>
+
+                    <h3>
+
+                        Smart Resources
+
+                    </h3>
+
+                    <p>
+
+                        Share notes, PDFs, PPTs and study materials.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="cp-highlight-card">
+
+                    <i class="fa-solid fa-users"></i>
+
+                    <h3>
+
+                        Collaboration
+
+                    </h3>
+
+                    <p>
+
+                        Build project teams and work efficiently together.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="cp-highlight-card">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <h3>
+
+                        Secure Platform
+
+                    </h3>
+
+                    <p>
+
+                        Safe authentication and protected student accounts.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ===========================================================
+    STUDENT EXPERIENCES
+=========================================================== -->
+
+<section class="cp-review-section">
+
+    <div class="container">
+
+        <div class="cp-heading text-center">
+
+            <span class="cp-section-badge">
+                STUDENT EXPERIENCES
+            </span>
+
+            <h2>
+                Trusted By Students Across Campus
+            </h2>
+
+            <p>
+                Discover how CampusPulse+ is transforming collaboration,
+                communication and learning every day.
+            </p>
+
+        </div>
+
+        <div class="row g-4 mt-2">
+
+            <div class="col-lg-4">
+
+                <div class="cp-review-card">
+
+                    <div class="cp-review-top">
+
+                        <div class="cp-avatar primary">
+                            AP
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                Aryan Patel
+                            </h5>
+
+                            <span>
+                                Computer Engineering
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <p>
+
+                        CampusPulse+ made collaboration incredibly simple.
+                        Sharing notes, announcements and communicating with
+                        classmates now happens in one place.
+
+                    </p>
+
+                    <div class="cp-stars">
+
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="cp-review-card">
+
+                    <div class="cp-review-top">
+
+                        <div class="cp-avatar success">
+                            SS
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                Sneha Shah
+                            </h5>
+
+                            <span>
+                                Information Technology
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <p>
+
+                        The platform helped our project team stay organized.
+                        Discussions, files and updates are always available.
+
+                    </p>
+
+                    <div class="cp-stars">
+
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="cp-review-card">
+
+                    <div class="cp-review-top">
+
+                        <div class="cp-avatar warning">
+                            RM
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                Rahul Mehta
+                            </h5>
+
+                            <span>
+                                MCA Student
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <p>
+
+                        A clean and modern platform.
+                        Announcements, resources and collaboration
+                        are finally organized properly.
+
+                    </p>
+
+                    <div class="cp-stars">
+
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===========================================================
+ FAQ
+=========================================================== -->
+
+<section class="cp-faq">
+
+    <div class="container">
+
+        <div class="cp-heading text-center">
+
+            <span class="cp-section-badge">
+                FAQ
+            </span>
+
+            <h2>
+
+                Frequently Asked Questions
+
+            </h2>
+
+            <p>
+
+                Everything you need to know about CampusPulse+.
+
+            </p>
+
+        </div>
+
+        <div class="accordion cp-accordion" id="faqAccordion">
+
+            <div class="accordion-item">
+
+                <h2 class="accordion-header">
+
+                    <button class="accordion-button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#cpfaq1">
+
+                        Is CampusPulse+ free to use?
+
+                    </button>
+
+                </h2>
+
+                <div id="cpfaq1"
+                     class="accordion-collapse collapse show"
+                     data-bs-parent="#faqAccordion">
+
+                    <div class="accordion-body">
+
+                        Yes. The platform is completely free for students
+                        and faculty members.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+                <h2 class="accordion-header">
+
+                    <button class="accordion-button collapsed"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#cpfaq2">
+
+                        Which file types are supported?
+
+                    </button>
+
+                </h2>
+
+                <div id="cpfaq2"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#faqAccordion">
+
+                    <div class="accordion-body">
+
+                        Images, PDFs, Word, Excel, PowerPoint,
+                        ZIP files, videos and many other formats
+                        are supported.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="accordion-item">
+
+                <h2 class="accordion-header">
+
+                    <button class="accordion-button collapsed"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#cpfaq3">
+
+                        Can students collaborate on projects?
+
+                    </button>
+
+                </h2>
+
+                <div id="cpfaq3"
+                     class="accordion-collapse collapse"
+                     data-bs-parent="#faqAccordion">
+
+                    <div class="accordion-body">
+
+                        Yes. Students can create discussions,
+                        exchange files, communicate and collaborate
+                        together efficiently.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===========================================================
+ PREMIUM CTA
+=========================================================== -->
+
+<section class="cp-cta">
+
+    <div class="container">
+
+        <div class="cp-cta-box">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                    <span class="cp-section-badge">
+
+                        START TODAY
+
+                    </span>
+
+                    <h2>
+
+                        Ready To Experience A Smarter Campus?
+
+                    </h2>
+
+                    <p>
+
+                        Join thousands of students already collaborating,
+                        learning and growing together through CampusPulse+.
+
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+
+                    @if (!User.Identity!.IsAuthenticated)
+                    {
+                        <a asp-controller="Account"
+                           asp-action="Register"
+                           class="btn cp-btn-primary me-2">
+
+                            <i class="fa-solid fa-user-plus"></i>
+
+                            Get Started
+
+                        </a>
+
+                        <a asp-controller="Account"
+                           asp-action="Login"
+                           class="btn cp-btn-secondary">
+
+                            Login
+
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Post"
+                           asp-action="Feed"
+                           class="btn cp-btn-primary">
+
+                            <i class="fa-solid fa-compass"></i>
+
+                            Explore Feed
+
+                        </a>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<partial name="_Footer" />
